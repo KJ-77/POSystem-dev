@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@aws-sdk/client-rds": "^3.635.0",
+    "serverless": "^4.1.23"
+  }
+}
