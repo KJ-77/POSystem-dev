@@ -1,11 +1,17 @@
 import "./App.css";
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './globalStyles';
+import TableOrder from './components/TableOrder';
 //import { Typography } from "@mui/material";
 /*import { Routes, Route } from "react-router-dom";*/
-import Navigationadmin from "./components/navigationadmin"
+
 
 function App() {
   return (
-<Navigationadmin/>
+    <ThemeProvider theme={theme}>
+    {/*   components........... */}
+    <TableOrder/>
+  </ThemeProvider>
   );
 }
 
