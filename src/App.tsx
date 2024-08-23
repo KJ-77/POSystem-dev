@@ -1,22 +1,14 @@
-import "./App.css";
-//import { Typography } from "@mui/material";
-/*import { Routes, Route } from "react-router-dom";*/
-import Navigationadmin from "./components/navigationadmin"
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import SignInPage from './pages/signin';
 
 function App() {
   return (
-<Navigationadmin/>
+    <Router>
+      <Routes>
+        <Route path="/signin" element={<SignInPage />} />
+      </Routes>
+    </Router>
   );
 }
 
 export default App;
-/*
-<>
-<div>kwejpojwpkqwcpkjp</div>
-<Navigationadmin/>
-  <Routes>
-    <Route path="/" element={<></>} />*/
-    {/*user_id !== null ? <Route path="Todo" element={<></>} /> : <></>*/}
-   /* <Route path="/add" element={<></>} />
-  </Routes>
-</>*/
