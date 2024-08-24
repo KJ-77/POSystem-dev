@@ -1,22 +1,20 @@
-import "./App.css";
-//import { Typography } from "@mui/material";
-/*import { Routes, Route } from "react-router-dom";*/
-import Navigationadmin from "./components/navigationadmin"
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import OrderForm from "./pages/OrderForm"
+import EmployeeDashboard from './pages/EmployeeDashboard';
 
-function App() {
+const App: React.FC = () => {
+
   return (
-<Navigationadmin/>
+    <>
+    <Router>
+      <Routes>
+        {/* <Route path="/" element={<Home />} /> */}
+        <Route path="/OrderForm" element={<OrderForm />} />
+        <Route path="/EmployeeDashboard" element={<EmployeeDashboard />} />
+      </Routes>
+    </Router>    
+    </>
   );
-}
-
+};
 export default App;
-/*
-<>
-<div>kwejpojwpkqwcpkjp</div>
-<Navigationadmin/>
-  <Routes>
-    <Route path="/" element={<></>} />*/
-    {/*user_id !== null ? <Route path="Todo" element={<></>} /> : <></>*/}
-   /* <Route path="/add" element={<></>} />
-  </Routes>
-</>*/
