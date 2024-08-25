@@ -14,14 +14,14 @@ function users(
   id: number,
   username: string,
   email: string,
-  rule: "Admin" | "Authorizer" | "Employee",
+  role: "Admin" | "Authorizer" | "Employee",
 
 ) {
   return {
     id,
     username,
     email,
-    rule
+    role
   };
 }
 
@@ -77,12 +77,12 @@ const columns: GridColDef[] = [
     ),
   },
   {
-    field: "rule",
+    field: "role",
     flex: 1,
     headerAlign: "center",
     align: "center",
     renderHeader: () => (
-      <strong style={{ color: "rgb(190,190,190)" }}>{"Rule"}</strong>
+      <strong style={{ color: "rgb(190,190,190)" }}>{"Role"}</strong>
     ),
     renderCell: (params) => {
       const { value } = params;
@@ -121,7 +121,7 @@ export default function UsersDataGrid() {
   const filteredRows = rows.filter(
     (row) =>
       row.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      row.rule.toLowerCase().includes(filter.toLowerCase())
+      row.role.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
@@ -187,7 +187,7 @@ export default function UsersDataGrid() {
           id={selectedRow.id}
           username={selectedRow.username}
           email={selectedRow.email}
-          rule={selectedRow.rule}
+          role={selectedRow.role}
           isopen={open}
           setisopen={setOpen}
         />

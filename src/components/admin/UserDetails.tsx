@@ -16,7 +16,7 @@ interface OrderDetails {
   id: number;
   username: string;
   email: string;
-  rule: "Admin" | "Authorizer" | "Employee";
+  role: "Admin" | "Authorizer" | "Employee";
   isopen: boolean;
   setisopen: (arg0: boolean) => void;
 }
@@ -25,7 +25,7 @@ const UserDetails: React.FC<OrderDetails> = ({
   id,
   username,
   email,
-  rule,
+  role,
   isopen,
   setisopen,
 }) => {
@@ -68,13 +68,13 @@ const UserDetails: React.FC<OrderDetails> = ({
             <Divider />
             <Box mt={2} mb={2} sx={{ display: "flex" }}>
               <Typography variant="body1" mr={2}>
-                <strong>Status: </strong>
+                <strong>Role: </strong>
               </Typography>
               <Typography
                 variant="body1"
                 sx={{ color: theme.palette.telet.main }}
               >
-                {rule}
+                {role}
               </Typography>
             </Box>
             <Divider />
