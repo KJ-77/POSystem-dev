@@ -7,8 +7,9 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
-import CustomButton from '../CustomStyle/CustomButton';
+import CustomButton from "../../CustomStyle/CustomButton";
 interface OrderDetails {
+  id: string;
   name: string;
   orderby: string;
   unitprice: number;
@@ -21,20 +22,20 @@ interface OrderDetails {
 }
 
 const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "blue";
-      case "accepted":
-        return "green";
-      case "rejected":
-        return "red";
-      default:
-        return "black"; // Default color if status doesn't match any case
-    }
-  };
-
+  switch (status) {
+    case "pending":
+      return "blue";
+    case "accepted":
+      return "green";
+    case "rejected":
+      return "red";
+    default:
+      return "black"; // Default color if status doesn't match any case
+  }
+};
 
 const OrderDetails: React.FC<OrderDetails> = ({
+  id,
   name,
   orderby,
   unitprice,
@@ -54,7 +55,7 @@ const OrderDetails: React.FC<OrderDetails> = ({
               variant="h4"
               fontWeight="bold"
               sx={{ marginBottom: 3 }}
-              style={{ color: '#005858' }}
+              style={{ color: "#005858" }}
             >
               Order Details
             </Typography>
@@ -62,46 +63,62 @@ const OrderDetails: React.FC<OrderDetails> = ({
 
           <DialogContent>
             <Box mb={2}>
-              <Typography variant="body1"><strong>Name:</strong> {name}</Typography>
-            </Box>
-            <Divider />
-            <Box mt={2} mb={2}>
-              <Typography variant="body1"><strong>Order ID:</strong> {orderby}</Typography>
-            </Box>
-            <Divider />
-            <Box mt={2} mb={2}>
               <Typography variant="body1">
-              <strong>Unit Price:</strong> {unitprice.toFixed(2)} $
+                <strong>Name:</strong> {name}
               </Typography>
             </Box>
             <Divider />
             <Box mt={2} mb={2}>
-              <Typography variant="body1"><strong>Quantity:</strong> {quantity}</Typography>
-            </Box>
-            <Divider />
-            <Box mt={2} mb={2}>
-              <Typography variant="body1"><strong>Total Price:</strong> {unitprice * quantity} $</Typography>
+              <Typography variant="body1">
+                <strong>Order By:</strong> {orderby}
+              </Typography>
             </Box>
             <Divider />
             <Box mt={2} mb={2}>
               <Typography variant="body1">
-              <strong>Description:</strong> {description}
+                <strong>Unit Price:</strong> {unitprice.toFixed(2)} $
               </Typography>
             </Box>
             <Divider />
-            <Box mt={2} mb={2} sx={{ display: 'flex' }} >
-                <Typography variant="body1" mr={2}><strong>Status:  </strong></Typography>
-              <Typography variant="body1" sx={{ color: getStatusColor(status) }}>   {status}</Typography>
+            <Box mt={2} mb={2}>
+              <Typography variant="body1">
+                <strong>Quantity:</strong> {quantity}
+              </Typography>
+            </Box>
+            <Divider />
+            <Box mt={2} mb={2}>
+              <Typography variant="body1">
+                <strong>Total Price:</strong> {unitprice * quantity} $
+              </Typography>
+            </Box>
+            <Divider />
+            <Box mt={2} mb={2}>
+              <Typography variant="body1">
+                <strong>Description:</strong> {description}
+              </Typography>
+            </Box>
+            <Divider />
+            <Box mt={2} mb={2} sx={{ display: "flex" }}>
+              <Typography variant="body1" mr={2}>
+                <strong>Status: </strong>
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{ color: getStatusColor(status) }}
+              >
+                {" "}
+                {status}
+              </Typography>
             </Box>
             <Divider />
             <Box mt={2}>
-              <Typography variant="body1"><strong>Date:</strong> {date}</Typography>
+              <Typography variant="body1">
+                <strong>Date:</strong> {date}
+              </Typography>
             </Box>
           </DialogContent>
           <DialogActions>
-          <CustomButton onClick={() => setisopen(false)}>
-              Close
-              </CustomButton>
+            <CustomButton onClick={() => setisopen(false)}>Close</CustomButton>
           </DialogActions>
         </Dialog>
       ) : (

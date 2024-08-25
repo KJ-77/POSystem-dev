@@ -1,9 +1,6 @@
-import React from 'react'
+import React from "react";
+import OrdersDataGrid from "../components/admin/DataGridOr";
 
 export default function admin() {
-  return (
-    <div>
-      
-    </div>
-  )
+  return <OrdersDataGrid />;
 }

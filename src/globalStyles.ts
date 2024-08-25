@@ -1,40 +1,45 @@
 import '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
+
 declare module '@mui/material/styles' {
   interface Palette {
-    third: Palette['primary'];
-    fourth: Palette['primary'];
-    fifth: Palette['primary'];
+    awal: Palette['primary'];
+    teni: Palette['primary'];
+    telet: Palette['primary'];
+    rabe3: Palette['primary'];
+    khames: Palette['primary'];
   }
 
   interface PaletteOptions {
-    third?: PaletteOptions['primary'];
-    fourth?: PaletteOptions['primary'];
-    fifth?: PaletteOptions['primary'];
+    awal?: PaletteOptions['primary'];
+    teni?: PaletteOptions['primary'];
+    telet?: PaletteOptions['primary'];
+    rabe3?: PaletteOptions['primary'];
+    khames?: PaletteOptions['primary'];
   }
 }
-
 
 const theme = createTheme({
   palette: {
     primary: {
+      main: '#009292',
+    },
+    awal: {
       main: '#fbfaf6',
     },
-    secondary: {
+    teni: {
       main: '#d2be8b',
     },
-    third: {
+    telet: {
       main: '#009292',
-
     },
-    fourth: {
+    rabe3: {
       main: '#005858',
     },
-    fifth: {
+    khames: {
       main: '#002a2f',
     },
   },
-
 });
 
 export default theme;
