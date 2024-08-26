@@ -94,7 +94,7 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     align: "center",
     renderHeader: () => (
-      <strong style={{ color: "rgb(190,190,190)" }}>{"Order Name "}</strong>
+      <strong style={{ color: "#002a2f" }}>{"Order Name "}</strong>
     ),
   },
   {
@@ -103,7 +103,7 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     align: "center",
     renderHeader: () => (
-      <strong style={{ color: "rgb(190,190,190)" }}>{"Order By "}</strong>
+      <strong style={{ color: "#002a2f" }}>{"Order By "}</strong>
     ),
   },
   {
@@ -112,7 +112,7 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     align: "center",
     renderHeader: () => (
-      <strong style={{ color: "rgb(190,190,190)" }}>{"Description"}</strong>
+      <strong style={{ color: "#002a2f" }}>{"Description"}</strong>
     ),
   },
   {
@@ -122,7 +122,7 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     align: "center",
     renderHeader: () => (
-      <strong style={{ color: "rgb(190,190,190)" }}>{"Total price"}</strong>
+      <strong style={{ color: "#002a2f" }}>{"Total price"}</strong>
     ),
   },
   {
@@ -131,7 +131,7 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     align: "center",
     renderHeader: () => (
-      <strong style={{ color: "rgb(190,190,190)" }}>{"Status"}</strong>
+      <strong style={{ color: "#002a2f" }}>{"Status"}</strong>
     ),
     renderCell: (params) => {
       const { value } = params;
@@ -159,7 +159,7 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     align: "center",
     renderHeader: () => (
-      <strong style={{ color: "rgb(190,190,190)" }}>{"Date"}</strong>
+      <strong style={{ color: "#002a2f" }}>{"Date"}</strong>
     ),
   },
 ];

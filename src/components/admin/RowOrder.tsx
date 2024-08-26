@@ -3,11 +3,11 @@ import { useState } from "react";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { TableBody } from "@mui/material";
-import OrderDetails from "./OrderDetails";
+//import OrderDetails from "./OrderDetails";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.fourth.main,
+
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -57,17 +57,7 @@ const RowOrder: React.FC<RowOrderProps> = ({ row }) => {
   return (
     <TableBody>
       {isopen ? (
-        <OrderDetails
-          name={row.name}
-          orderby={row.orderby}
-          unitprice={row.unitprice}
-          quantity={row.quantity}
-          description={row.description}
-          status={row.status}
-          date={row.date}
-          isopen={isopen}
-          setisopen={setisopen}
-        />
+     <></>
       ) : (
         <StyledTableRow key={row.name} onClick={() => setisopen(!isopen)}>
           <StyledTableCell component="th" scope="row">

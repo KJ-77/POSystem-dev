@@ -22,7 +22,7 @@ declare module '@mui/material/styles' {
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#009292',
+      main: '#005858',
     },
     awal: {
       main: '#fbfaf6',
@@ -31,10 +31,10 @@ const theme = createTheme({
       main: '#d2be8b',
     },
     telet: {
-      main: '#009292',
+      main: '#005858',
     },
     rabe3: {
-      main: '#005858',
+      main: '#009292',
     },
     khames: {
       main: '#002a2f',
