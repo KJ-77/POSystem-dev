@@ -49,7 +49,7 @@ const UserDetails: React.FC<OrderDetails> = ({
               sx={{ marginBottom: 3 }}
               style={{ color: "#005858" }}
             >
-              Order Details
+              User Details
             </Typography>
           </DialogTitle>
 
