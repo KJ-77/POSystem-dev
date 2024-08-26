@@ -12,38 +12,37 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import signinImage from '../assets/signin.png';
-import lockIcon from '../assets/icons8-lock-64.png'; // Import the custom lock icon
+import lockIcon from '../assets/icons8-lock-64.png'; 
+import { signIn, type SignInInput } from 'aws-amplify/auth'; // Updated import
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-// Create a theme with the custom button color
 const defaultTheme = createTheme({
   palette: {
     primary: {
-      main: '#005858', // Custom color for the primary button
+      main: '#005858',
     },
   },
 });
 
+async function handleSignIn({ username, password }: SignInInput) {
+  try {
+    const user = await signIn({ username, password });
+    console.log('User signed in successfully:', user);
+  } catch (error) {
+    console.log('Error signing in:', error);
+  }
+}
+
 export default function SignInSide() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const username = data.get('email') as string;
+    const password = data.get('password') as string;
+    try {
+      await handleSignIn({ username, password });
+    } catch (error) {
+      console.log('Error signing in', error);
+    }
   };
 
   return (
@@ -109,7 +108,7 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                color="primary" // Apply the primary color defined in the theme
+                color="primary"
               >
                 Sign In
               </Button>
@@ -120,7 +119,6 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
         </Grid>
