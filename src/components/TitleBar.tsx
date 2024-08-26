@@ -56,7 +56,7 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
+        ProOrder
       </Typography>
       <Divider />
       <List>
