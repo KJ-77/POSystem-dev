@@ -6,7 +6,7 @@ import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-
+import SignUp from './EditUserModal';
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -26,7 +26,6 @@ export default function TransitionsModal() {
 
   return (
     <div>
-      {/* <Button onClick={handleOpen}>Edit User</Button> */}
       <Button variant="contained" color="success" onClick={handleOpen}>
         Edit User
       </Button>
@@ -44,12 +43,9 @@ export default function TransitionsModal() {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
+            
+          <SignUp />
+            
           </Box>
         </Fade>
       </Modal>
