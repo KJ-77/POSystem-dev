@@ -1,17 +1,11 @@
 import React, { useState } from "react";
-import {
-  DataGrid,
-  GridColDef,
-  GridToolbar,
-  GridRowParams,
-} from "@mui/x-data-grid";
-//import { useTheme } from '@mui/material/styles';
+import { DataGrid, GridColDef, GridRowParams, GridToolbar } from "@mui/x-data-grid";
 import OrderDetails from "./OrderDetails";
 import theme from "../../globalStyles";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 
-function orders(
+function createOrder(
   id: number,
   name: string,
   orderby: string,
@@ -34,57 +28,12 @@ function orders(
   };
 }
 
-const rows = [
-  orders(
-    1,
-    "Laptop",
-    "khalil01",
-    "15 inch MacBook Pro",
-    799.99,
-    15,
-    "accepted",
-    "2023-12-20"
-  ),
-  orders(
-    2,
-    "Laptop",
-    "khalil01",
-    "15 inch MacBook Pro",
-    799.99,
-    15,
-    "accepted",
-    "2023-12-25"
-  ),
-  orders(
-    3,
-    "Phone",
-    "khalil01",
-    "iPhone 13 Pro Max",
-    599.99,
-    1,
-    "pending",
-    "2023-12-20"
-  ),
-  orders(
-    4,
-    "Tablet",
-    "khalil01",
-    "iPad Pro 11 inch",
-    399.99,
-    3,
-    "accepted",
-    "2023-12-15"
-  ),
-  orders(
-    5,
-    "Headphones",
-    "khalil01",
-    "Sony WH-1000XM4 Noise-Canceling Headphones",
-    199.99,
-    4,
-    "rejected",
-    "2023-12-10"
-  ),
+const initialRows = [
+  createOrder(1, "Laptop", "khalil01", "15 inch MacBook Pro", 799.99, 15, "accepted", "2023-12-20"),
+  createOrder(2, "Laptop", "khalil01", "15 inch MacBook Pro", 799.99, 15, "accepted", "2023-12-25"),
+  createOrder(3, "Phone", "khalil01", "iPhone 13 Pro Max", 599.99, 1, "pending", "2023-12-20"),
+  createOrder(4, "Tablet", "khalil01", "iPad Pro 11 inch", 399.99, 3, "accepted", "2023-12-15"),
+  createOrder(5, "Headphones", "khalil01", "Sony WH-1000XM4 Noise-Canceling Headphones", 199.99, 4, "rejected", "2023-12-10"),
 ];
 
 const columns: GridColDef[] = [
@@ -93,27 +42,21 @@ const columns: GridColDef[] = [
     flex: 1,
     headerAlign: "center",
     align: "center",
-    renderHeader: () => (
-      <strong style={{ color: "#002a2f" }}>{"Order Name "}</strong>
-    ),
+    renderHeader: () => <strong style={{ color: "#002a2f" }}>Order Name</strong>,
   },
   {
     field: "orderby",
     flex: 1,
     headerAlign: "center",
     align: "center",
-    renderHeader: () => (
-      <strong style={{ color: "#002a2f" }}>{"Order By "}</strong>
-    ),
+    renderHeader: () => <strong style={{ color: "#002a2f" }}>Order By</strong>,
   },
   {
     field: "description",
     flex: 2,
     headerAlign: "center",
     align: "center",
-    renderHeader: () => (
-      <strong style={{ color: "#002a2f" }}>{"Description"}</strong>
-    ),
+    renderHeader: () => <strong style={{ color: "#002a2f" }}>Description</strong>,
   },
   {
     field: "totalprice",
@@ -121,29 +64,20 @@ const columns: GridColDef[] = [
     flex: 1,
     headerAlign: "center",
     align: "center",
-    renderHeader: () => (
-      <strong style={{ color: "#002a2f" }}>{"Total price"}</strong>
-    ),
+    renderHeader: () => <strong style={{ color: "#002a2f" }}>Total Price</strong>,
   },
   {
     field: "status",
     flex: 1,
     headerAlign: "center",
     align: "center",
-    renderHeader: () => (
-      <strong style={{ color: "#002a2f" }}>{"Status"}</strong>
-    ),
+    renderHeader: () => <strong style={{ color: "#002a2f" }}>Status</strong>,
     renderCell: (params) => {
       const { value } = params;
       return (
         <div
           style={{
-            color:
-              value === "accepted"
-                ? "green"
-                : value === "rejected"
-                ? "red"
-                : "blue",
+            color: value === "accepted" ? "green" : value === "rejected" ? "red" : "blue",
             fontWeight: "bold",
             textAlign: "center",
           }}
@@ -158,17 +92,15 @@ const columns: GridColDef[] = [
     flex: 1,
     headerAlign: "center",
     align: "center",
-    renderHeader: () => (
-      <strong style={{ color: "#002a2f" }}>{"Date"}</strong>
-    ),
+    renderHeader: () => <strong style={{ color: "#002a2f" }}>Date</strong>,
   },
 ];
 
 export default function OrdersDataGrid() {
-  //const theme = useTheme();
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [rows, setRows] = useState(initialRows);
+  const [selectedRow, setSelectedRow] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState<string>("");
   const [filtername, setFiltername] = useState("All");
   const [open, setOpen] = useState(false);
 
@@ -177,10 +109,18 @@ export default function OrdersDataGrid() {
     setOpen(true);
   };
 
+  const updateStatus = (id: number, newStatus: "pending" | "accepted" | "rejected") => {
+    setRows((prevRows) =>
+      prevRows.map((row) =>
+        row.id === id ? { ...row, status: newStatus } : row
+      )
+    );
+  };
+
   const filteredRows = rows.filter(
     (row) =>
       row.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      row.status.toLowerCase().includes(filter.toLowerCase())
+      (filter === "" || row.status.toLowerCase() === filter.toLowerCase())
   );
 
   return (
@@ -195,19 +135,15 @@ export default function OrdersDataGrid() {
           style={{ width: "25%" }}
         />
         <Box>
-          <InputLabel id="demo-simple-select-helper-label">Status</InputLabel>
+          <InputLabel id="status-select-label">Status</InputLabel>
           <Select
-            labelId="demo-simple-select-helper-label"
-            id="demo-simple-select-helper"
+            labelId="status-select-label"
+            id="status-select"
             value={filtername}
             onChange={(e) => {
-              if (e.target.value === "All") {
-                setFilter("");
-                setFiltername("All");
-              } else {
-                setFilter(e.target.value);
-                setFiltername(e.target.value);
-              }
+              const value = e.target.value;
+              setFilter(value === "All" ? "" : value.toLowerCase());
+              setFiltername(value);
             }}
             style={{ marginBottom: "20px" }}
           >
@@ -224,18 +160,18 @@ export default function OrdersDataGrid() {
         pageSize={5}
         rowsPerPageOptions={[5, 10, 20]}
         disableSelectionOnClick
-        slots={{
-          toolbar: GridToolbar,
+        components={{
+          Toolbar: GridToolbar,
         }}
         sx={{
-          color: theme.palette.telet.main,
+          color: theme.palette.text.primary,
           "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: "red",
-            color: "red",
+            backgroundColor: theme.palette.background.paper,
+            color: theme.palette.text.primary,
             fontWeight: "bold",
           },
           "& .MuiDataGrid-cell": {
-            color: "black",
+            color: theme.palette.text.primary,
             textAlign: "center",
           },
         }}
@@ -253,6 +189,7 @@ export default function OrdersDataGrid() {
           date={selectedRow.date}
           isopen={open}
           setisopen={setOpen}
+          updateStatus={updateStatus}
         />
       )}
     </div>

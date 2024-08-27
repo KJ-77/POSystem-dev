@@ -90,9 +90,9 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
           <img
             src={logo}
             alt="Logo"
-            style={{ width: '150px', height: 'auto', marginRight: '260px' }}
+            style={{ width: '150px', height: 'auto' }}
           />
-          <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexGrow: 1 }}>
+          <Box sx={{ display: { xs: 'none', sm: 'flex' ,alignItems:"center",justifyContent:"center"}, flexGrow: 1 }}>
             {navItems.map((item) => (
               <Button
                 key={item.name}
