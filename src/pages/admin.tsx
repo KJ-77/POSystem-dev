@@ -1,6 +1,12 @@
 import React from "react";
 import OrdersDataGrid from "../components/admin/DataGridOr";
+import TitleBar from "../components/TitleBar";
 
 export default function admin() {
-  return <OrdersDataGrid />;
+  return (
+    <>
+      <TitleBar role="Admin" />
+      <OrdersDataGrid />
+    </>
+  );
 }
