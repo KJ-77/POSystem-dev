@@ -12,6 +12,7 @@ import CustomButton from "../../CustomStyle/CustomButton";
 import theme from "../../globalStyles";
 import ConfirmationDelete from "./ConfirmationDelete"
 import { useState } from "react";
+import TransitionsModal from "./EditUser";
 interface OrderDetails {
   id: number;
   username: string;
@@ -87,6 +88,7 @@ const UserDetails: React.FC<OrderDetails> = ({
                 width: "100%",
               }}
             >
+              
               <Button
         sx={{
           backgroundColor: 'rgb(200,0,0)',
@@ -104,6 +106,7 @@ const UserDetails: React.FC<OrderDetails> = ({
         onClose={handleDialogClose}
         onConfirm={handleConfirmDelete}
       />
+      <TransitionsModal />
               <CustomButton onClick={() => setisopen(false)}>
                 Close
               </CustomButton>
