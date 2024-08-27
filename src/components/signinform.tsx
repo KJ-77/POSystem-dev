@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -13,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import signinImage from '../assets/signin.png';
 import lockIcon from '../assets/icons8-lock-64.png'; 
-import {  signIn, type SignInInput, signOut } from '@aws-amplify/auth';    
+import {  signIn, signOut, type SignInInput } from '@aws-amplify/auth'; // Updated import
 
 
 const defaultTheme = createTheme({
@@ -24,23 +25,8 @@ const defaultTheme = createTheme({
   },
 });
 
-
-
-
 async function handleSignIn({ username, password }: SignInInput, navigate: (path: string) => void) {
   try {
-    React.useEffect(() => {
-      async function signOutUser() {
-        try {
-          await signOut();
-          console.log('User signed out');
-        } catch (err) {
-          console.log('Error signing out user', err);
-        }
-      }
-  
-      signOutUser();
-    }, []);
     const user = await signIn({ username, password });
     
     console.log('User signed in successfully:', user);
@@ -56,6 +42,18 @@ async function handleSignIn({ username, password }: SignInInput, navigate: (path
 }
 
 export default function SignInSide() {
+  React.useEffect(() => {
+    async function signOutUser() {
+      try {
+        await signOut();
+        console.log('User signed out');
+      } catch (err) {
+        console.log('Error signing out user', err);
+      }
+    }
+
+    signOutUser();
+  }, []);
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -137,6 +135,13 @@ export default function SignInSide() {
               >
                 Sign In
               </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+              </Grid>
             </Box>
           </Box>
         </Grid>
