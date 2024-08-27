@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,7 +14,8 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import signinImage from '../assets/signin.png';
 import lockIcon from '../assets/icons8-lock-64.png'; 
-import { signIn, type SignInInput } from 'aws-amplify/auth'; // Updated import
+import {  signIn, type SignInInput } from '@aws-amplify/auth'; // Updated import
+
 
 const defaultTheme = createTheme({
   palette: {
@@ -23,23 +25,32 @@ const defaultTheme = createTheme({
   },
 });
 
-async function handleSignIn({ username, password }: SignInInput) {
+async function handleSignIn({ username, password }: SignInInput, navigate: (path: string) => void) {
   try {
     const user = await signIn({ username, password });
+    
     console.log('User signed in successfully:', user);
+    if (user?.nextStep?.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
+      console.log('Navigating to confirmation page');
+     
+
+      navigate('/confirmation');
+    }
   } catch (error) {
     console.log('Error signing in:', error);
   }
 }
 
 export default function SignInSide() {
+  const navigate = useNavigate();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const username = data.get('email') as string;
     const password = data.get('password') as string;
     try {
-      await handleSignIn({ username, password });
+      await handleSignIn({ username, password }, navigate);
     } catch (error) {
       console.log('Error signing in', error);
     }
