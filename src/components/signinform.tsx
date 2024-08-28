@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,7 +14,18 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import signinImage from '../assets/signin.png';
 import lockIcon from '../assets/icons8-lock-64.png'; 
-import {  signIn, signOut, type SignInInput } from '@aws-amplify/auth'; // Updated import
+import {  signIn, signOut,  type SignInInput, getCurrentUser } from '@aws-amplify/auth'; 
+
+async function currentAuthenticatedUser() {
+  try {
+    const { username, userId, signInDetails } = await getCurrentUser();
+    console.log(`The username: ${username}`);
+    console.log(`The userId: ${userId}`);
+    console.log(`The signInDetails: ${signInDetails}`);
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 
 const defaultTheme = createTheme({
@@ -28,8 +39,11 @@ const defaultTheme = createTheme({
 async function handleSignIn({ username, password }: SignInInput, navigate: (path: string) => void) {
   try {
     const user = await signIn({ username, password });
-    
+
     console.log('User signed in successfully:', user);
+
+    currentAuthenticatedUser();
+    
     if (user?.nextStep?.signInStep === 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED') {
       console.log('Navigating to confirmation page');
      

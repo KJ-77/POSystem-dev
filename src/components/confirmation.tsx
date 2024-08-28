@@ -24,7 +24,6 @@ const ConfirmationPage = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [email] = useState<string>("");
   const [passwordsMatch, setPasswordsMatch] = useState<boolean>(true);
 
   useEffect(() => {
@@ -41,10 +40,7 @@ const ConfirmationPage = () => {
       return;
     }
 
-    if (!email) {
-      setError("Email is required");
-      return;
-    }
+    
 
     try {
       await handleNewPassword(password);
@@ -125,7 +121,7 @@ const ConfirmationPage = () => {
               },
             }}
             disabled={
-              !passwordsMatch || !password || !confirmPassword || !email
+              !passwordsMatch || !password || !confirmPassword
             }
           >
             Confirm
