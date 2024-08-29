@@ -57,6 +57,15 @@ async function handleSignIn(
   navigate: (path: string) => void
 ) {
   try {
+    
+      try {
+        localStorage.clear();
+        await signOut();
+        console.log("User signed out");
+      } catch (err) {
+        console.log("Error signing out user", err);
+      }
+      
     const user = await signIn({ username, password });
     console.log("User signed in successfully:", user);
 
@@ -87,20 +96,8 @@ async function handleSignIn(
   }
 }
 
-export default function SignInSide() {
-  React.useEffect(() => {
-    async function signOutUser() {
-      try {
-        localStorage.clear();
-        await signOut();
-        console.log("User signed out");
-      } catch (err) {
-        console.log("Error signing out user", err);
-      }
-    }
 
-    signOutUser();
-  }, []);
+export default function SignInSide() {
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

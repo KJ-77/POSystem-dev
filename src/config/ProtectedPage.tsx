@@ -5,7 +5,7 @@ interface ProtectedRouteProps {
   children: React.ReactNode;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+const ProtectedPage: React.FC<ProtectedRouteProps> = ({ children }) => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -31,4 +31,4 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-export default ProtectedRoute;
+export default ProtectedPage;

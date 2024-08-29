@@ -7,7 +7,7 @@ const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBackToHome = () => {
-    navigate('/signin');
+    navigate('/');
   };
 
   return (
@@ -41,7 +41,7 @@ const NotFoundPage: React.FC = () => {
         }}
         onClick={handleBackToHome}
       >
-        Back to Home
+        Back to Sign-Up
       </Button>
     </Container>
   );

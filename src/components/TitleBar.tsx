@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -31,23 +31,29 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
   };
 
   const getNavItems = (role: Props['role']) => {
+    const navigate = useNavigate(); 
+    const handleLogout = () => {
+      console.log("HandleLogout");
+      localStorage.clear();
+      navigate('/'); 
+    };
     switch (role) {
       case 'Employee':
         return [
           { name: 'View Orders', path: '/EmployeeDashboard' },
           { name: 'Create Order', path: '/OrderForm' },
-          { name: 'Logout', path: '/logout' },
+          { name: 'Logout', onclick: handleLogout,  },
         ];
       case 'Authorizer':
-        return [{ name: 'Logout', path: '/logout' }];
+        return [{ name: 'Logout', onclick: handleLogout }];
       case 'Admin':
         return [
           { name: 'View Orders', path: '/orders' },
           { name: 'View Users', path: '/users' },
-          { name: 'Logout', path: '/logout' },
+          { name: 'Logout', onclick: handleLogout },
         ];
       default:
-        return [{ name: 'Logout', path: '/logout' }];
+        return [{ name: 'Logout', onclick: handleLogout }];
     }
   };
 
@@ -97,8 +103,7 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
               <Button
                 key={item.name}
                 sx={{ color: '#fff', mx: 1 }}
-                component={Link}
-                to={item.path}
+                onClick={item.onclick}
               >
                 {item.name}
               </Button>

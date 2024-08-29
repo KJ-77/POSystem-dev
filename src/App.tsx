@@ -19,11 +19,11 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
-          <Route path="/OrderForm" element={<OrderForm />} />
-          <Route path="/EmployeeDashboard" element={<EmployeeDashboard />} />
+          <Route path="/OrderForm" element={<ProtectedRoute><OrderForm /></ProtectedRoute>} />
+          <Route path="/EmployeeDashboard" element={<ProtectedRoute><EmployeeDashboard /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-          <Route path="/authorizer" element={<Authorizer />} /> {/* Use capitalized component name */}
-          <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/authorizer" element={<ProtectedRoute><Authorizer /></ProtectedRoute>} /> {/* Use capitalized component name */}
+          <Route path="/admin/users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
           <Route path="/confirmation" element={<ConfirmationPage />} />
           <Route path="/" element={<SignInPage />} />
           <Route path="/*" element={<NotFoundPage />} />
