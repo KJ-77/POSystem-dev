@@ -12,18 +12,20 @@ import OrderForm from "./pages/OrderForm";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import ConfirmationPage from './pages/confirmation';
 import NotFoundPage from "./pages/NotFoundPage";
-import ProtectedRoute from "./config/ProtectedRoute";
+import ProtectedAdmin from "./ProtectedRoutes/ProtectedAdmin";
+import ProtectedEmployee from "./ProtectedRoutes/ProtectedEmployee";
+import ProtectedAuthorizer from "./ProtectedRoutes/ProtectedAuthorizer"
 const App = () => {
   Amplify.configure(amplifyConfig);
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
-          <Route path="/OrderForm" element={<ProtectedRoute><OrderForm /></ProtectedRoute>} />
-          <Route path="/EmployeeDashboard" element={<ProtectedRoute><EmployeeDashboard /></ProtectedRoute>} />
-          <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-          <Route path="/authorizer" element={<ProtectedRoute><Authorizer /></ProtectedRoute>} /> {/* Use capitalized component name */}
-          <Route path="/admin/users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
+          <Route path="/OrderForm" element={<ProtectedEmployee><OrderForm /></ProtectedEmployee>} />
+          <Route path="/EmployeeDashboard" element={<ProtectedEmployee><EmployeeDashboard /></ProtectedEmployee>} />
+          <Route path="/admin" element={<ProtectedAdmin><Admin /></ProtectedAdmin>} />
+          <Route path="/authorizer" element={<ProtectedAuthorizer><Authorizer /></ProtectedAuthorizer>} /> {/* Use capitalized component name */}
+          <Route path="/admin/users" element={<ProtectedAdmin><AdminUsers /></ProtectedAdmin>} />
           <Route path="/confirmation" element={<ConfirmationPage />} />
           <Route path="/" element={<SignInPage />} />
           <Route path="/*" element={<NotFoundPage />} />

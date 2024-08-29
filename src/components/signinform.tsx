@@ -65,7 +65,7 @@ async function handleSignIn(
       } catch (err) {
         console.log("Error signing out user", err);
       }
-      
+
     const user = await signIn({ username, password });
     console.log("User signed in successfully:", user);
 
@@ -88,6 +88,9 @@ async function handleSignIn(
     localStorage.setItem('role', role);
 
     if (role === "Admin" ) navigate("/admin");
+    if (role === "Authorizer" ) navigate("/Authorizer");
+    if (role === "Employee" ) navigate("/EmployeeDashboard");
+
 
 
       

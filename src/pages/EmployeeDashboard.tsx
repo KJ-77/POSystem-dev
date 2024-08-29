@@ -1,10 +1,9 @@
 import React from 'react';
 import TitleBar from "../components/TitleBar";
 import { Typography } from '@mui/material';
-import ProtectedRoute from '../config/ProtectedRoute';
 const EmployeeDashboard: React.FC = () => {
   return (
-    <ProtectedRoute>
+
     <div>
       <TitleBar role="Employee" />
       <Typography
@@ -19,7 +18,6 @@ const EmployeeDashboard: React.FC = () => {
       >View Order Table</Typography>   
             {/* Add more content or components here */}
     </div>
-    </ProtectedRoute>
   );
 };
 

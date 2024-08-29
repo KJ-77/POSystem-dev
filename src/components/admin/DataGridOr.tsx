@@ -157,6 +157,7 @@ export default function OrdersDataGrid() {
       <DataGrid
         rows={filteredRows}
         columns={columns}
+        //@ts-ignore
         pageSize={5}
         rowsPerPageOptions={[5, 10, 20]}
         disableSelectionOnClick
