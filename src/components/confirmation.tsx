@@ -2,15 +2,14 @@ import { useState, useEffect, FormEvent } from "react";
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
 import { confirmSignIn } from "@aws-amplify/auth";
 
-const handleNewPassword = async (
-  newPassword: string
-): Promise<void> => {
+const handleNewPassword = async (newPassword: string): Promise<void> => {
   try {
+    
+
     console.log(newPassword);
     await confirmSignIn({
       challengeResponse: newPassword,
-    });
-    console.log("New password set successfully");
+    })
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error setting new password:", error.message);
@@ -39,8 +38,6 @@ const ConfirmationPage = () => {
       setError("Passwords do not match");
       return;
     }
-
-    
 
     try {
       await handleNewPassword(password);
@@ -120,9 +117,7 @@ const ConfirmationPage = () => {
                 backgroundColor: "#004d4d",
               },
             }}
-            disabled={
-              !passwordsMatch || !password || !confirmPassword
-            }
+            disabled={!passwordsMatch || !password || !confirmPassword}
           >
             Confirm
           </Button>

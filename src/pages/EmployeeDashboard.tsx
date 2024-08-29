@@ -1,10 +1,9 @@
 import React from 'react';
 import TitleBar from "../components/TitleBar";
 import { Typography } from '@mui/material';
-
 const EmployeeDashboard: React.FC = () => {
   return (
-    //const userRole= 'Employee' ; // Example role
+
     <div>
       <TitleBar role="Employee" />
       <Typography

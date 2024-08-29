@@ -1,7 +1,8 @@
 import SignInSide from '../components/signinform';
 
 const SignInPage = () => {
-  return <SignInSide />;
-};
+  return (
+    <SignInSide />
+)};
 
 export default SignInPage;
