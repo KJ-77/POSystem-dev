@@ -11,6 +11,8 @@ import AdminUsers from "./pages/AdminUsers";
 import OrderForm from "./pages/OrderForm";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import ConfirmationPage from './pages/confirmation';
+import NotFoundPage from "./pages/NotFoundPage";
+import ProtectedRoute from "./config/ProtectedRoute";
 const App = () => {
   Amplify.configure(amplifyConfig);
   return (
@@ -19,11 +21,12 @@ const App = () => {
         <Routes>
           <Route path="/OrderForm" element={<OrderForm />} />
           <Route path="/EmployeeDashboard" element={<EmployeeDashboard />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
           <Route path="/authorizer" element={<Authorizer />} /> {/* Use capitalized component name */}
           <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/confirmation" element={<ConfirmationPage />} />
-          <Route path="/*" element={<SignInPage />} />
+          <Route path="/" element={<SignInPage />} />
+          <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

@@ -7,7 +7,7 @@ const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBackToHome = () => {
-    navigate('/');
+    navigate('/signin');
   };
 
   return (
