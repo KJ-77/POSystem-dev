@@ -3,25 +3,54 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import theme from "../../globalStyles";
+//import theme from "../../globalStyles";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import lockIcon from '../../assets/icons8-lock-64.png'; 
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 
 const defaultTheme = createTheme();
 
-export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+export default function SignUp({id} :any) {
+
+  const [first, setfirst] = React.useState("");
+  const [last, setlast] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [error,seterror] = React.useState("");
+  const navigate = useNavigate();
+
+
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const fullName = `${first} ${last}`;
+    
+    try {
+      const response = await fetch(`https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/user/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+
+          FULLNAME:fullName,
+          email:email
+          }),
+      });
+  
+      if (response.ok) {
+        navigate(0);
+      } else {
+        seterror("somthing wrong!!!!");
+      }
+    } catch (error : any) {
+
+      seterror(error);
+    }
   };
 
   return (
@@ -48,7 +77,8 @@ export default function SignUp() {
                 <TextField
                   autoComplete="given-name"
                   name="firstName"
-                  
+                  value={first}
+                  onChange={(e)=>setfirst(e.target.value)}
                   fullWidth
                   id="firstName"
                   label="First Name"
@@ -57,7 +87,8 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  
+                  value={last}
+                  onChange={(e)=>setlast(e.target.value)}
                   fullWidth
                   id="lastName"
                   label="Last Name"
@@ -67,7 +98,8 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  
+                  value={email}
+                  onChange={(e)=>setEmail(e.target.value)}
                   fullWidth
                   id="email"
                   label="Email Address"
@@ -86,6 +118,11 @@ export default function SignUp() {
             </Button>
             
           </Box>
+{error &&(
+          <Box p={2} fontSize="12px" color="red">
+          error : {error}
+          </Box>)
+        }
         </Box>
       </Container>
     </ThemeProvider>

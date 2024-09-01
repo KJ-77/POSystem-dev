@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import  { useEffect, useState } from "react";
 import {
   DataGrid,
   GridColDef,
@@ -9,57 +9,23 @@ import theme from "../../globalStyles";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import UserDetails from "./UserDetails";
+import axios from 'axios';
+import Loading from "../loading";
+import AddUser from "./AddUser"
 
-function users(
-  id: number,
-  username: string,
-  email: string,
-  role: "Admin" | "Authorizer" | "Employee",
-
-) {
-  return {
-    id,
-    username,
-    email,
-    role
-  };
+//"ID":2,"FULLNAME":"Jane Smith","":"jane.smith@example.com","position":"admin","status":"working"
+interface Users {
+  id: string;
+  FULLNAME: string;
+  email: string;
+  position: string;
+  status: string;
 }
 
-const rows = [
-  users(
-    1,
-    "khalil01",
-    "khalil01@gmail.com",
-    "Admin"
-  ),
-  users(
-    2,
-    "jawad1",
-    "jawad@gmail.com",
-    "Admin"
-  ),
-  users(
-    3,
-    "jamil",
-    "jamil@gmail.com",
-    "Employee"),
-    users(
-    4,
-    "khalil",
-    "khaled@gmail.com",
-    "Authorizer"
-  ),
-    users(
-    5,
-    "mustafa",
-    "mustafa@gmail.com",
-    "Employee"
-  ),
-];
 
 const columns: GridColDef[] = [
   {
-    field: "username",
+    field: "FULLNAME",
     flex: 1,
     headerAlign: "center",
     align: "center",
@@ -77,7 +43,7 @@ const columns: GridColDef[] = [
     ),
   },
   {
-    field: "role",
+    field: "position",
     flex: 1,
     headerAlign: "center",
     align: "center",
@@ -113,18 +79,45 @@ export default function UsersDataGrid() {
   const [filtername, setFiltername] = useState("All");
   const [open, setOpen] = useState(false);
 
+  const [users, setUsers] = useState<Users[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  /*const [error, setError] = useState<string | null>(null);*/
+  
+  useEffect(() => {
+    const fetchUserss = async () => {
+      try {
+        const response = await axios.get('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/users');
+        
+        const userssWithId = response.data.map((users: any, index: number) => ({
+          ...users,
+          id: users.ID || index.toString(), // Ensure each users has a unique id
+        }));
+        setUsers(userssWithId);
+      } catch (err ) {
+       // setError('Failed to fetch users');
+       console.log(err)
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserss();
+  }, []);
+
   const handleRowClick = (params: GridRowParams) => {
     setSelectedRow(params.row);
     setOpen(true);
   };
 
-  const filteredRows = rows.filter(
+  const filteredRows = users.filter(
     (row) =>
-      row.username.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      row.role.toLowerCase().includes(filter.toLowerCase())
+      row.FULLNAME.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      row.position.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
+    <>
+   {loading ? (<Loading/>) : (
     <div style={{ height: 400, width: "100%" }}>
       <Box display="flex" alignItems="center" gap={2} mb={3}>
         <SearchIcon style={{ color: theme.palette.primary.main }} />
@@ -185,13 +178,17 @@ export default function UsersDataGrid() {
       {selectedRow && (
         <UserDetails
           id={selectedRow.id}
-          username={selectedRow.username}
+          username={selectedRow.FULLNAME}
           email={selectedRow.email}
-          role={selectedRow.role}
+          role={selectedRow.position}
           isopen={open}
           setisopen={setOpen}
         />
       )}
+      <AddUser />
     </div>
+    
+  )}
+  </>
   );
 }

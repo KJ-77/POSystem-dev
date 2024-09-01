@@ -11,7 +11,8 @@ import {
 import theme from "../../globalStyles";
 import { styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
-
+//import {signUp } from "@aws-amplify/auth";
+//import  Auth  from 'aws-amplify/auth';
 const CustomToggleButton = styled(ToggleButton)(({ theme, selected }) => ({
   backgroundColor: selected ? "white" : theme.palette.telet.main,
   color: "white",
@@ -24,10 +25,9 @@ function MyModal() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const [errorapi, seterrorapi] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [role, setRole] = useState("Authorizer");
   const [errors, setErrors] = useState({
     username: "",
@@ -57,15 +57,6 @@ function MyModal() {
       }));
     }
   };
-  const handlePasswordChange = (event: any) => {
-    setPassword(event.target.value);
-    if (password.length >= 6) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        password: "",
-      }));
-    }
-  };
 
   const handleRoleChange = (event: any, newRole: string) => {
     if (newRole !== null) {
@@ -73,35 +64,31 @@ function MyModal() {
     }
   };
 
-  const handleSubmit = () => {
-    const isValid = validateForm();
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch(
+        "https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/user",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ID: "124",
+            FULLNAME: username,
+            email: email,
+            position: role,
+          }),
+        }
+      );
 
-    if (isValid) {
-      console.log("Form submitted:", { username, email, password, role });
-      handleClose();
+      if (!response.ok) {
+        seterrorapi(`HTTP error! Status: ${response.status}`);
+      }
+    } catch (err: any) {
+      seterrorapi(err.message);
     }
   };
-
-  const validateForm = () => {
-    const newErrors = { username: "", email: "", password: "" };
-
-    if (!username) {
-      newErrors.username = "Username is required.";
-    }
-
-    if (!email || !isValidEmail(email)) {
-      newErrors.email = "Invalid email address.";
-    }
-
-    if (!password || password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters.";
-    }
-
-    setErrors(newErrors);
-
-    return !Object.values(newErrors).some((error) => error !== "");
-  };
-
   return (
     <div>
       <Button
@@ -113,7 +100,7 @@ function MyModal() {
           "&:hover": {
             backgroundColor: theme.palette.rabe3.main,
           },
-          textTransform: "none",
+          textAlign: "right",
         }}
         onClick={handleOpen}
         startIcon={<AddIcon />}
@@ -143,7 +130,7 @@ function MyModal() {
             Create User
           </Typography>
           <TextField
-            label="Username"
+            label="Full Name"
             value={username}
             onChange={handleUsernameChange}
             fullWidth
@@ -163,17 +150,6 @@ function MyModal() {
             error={!!errors.email}
             helperText={errors.email}
           />
-          <TextField
-            label="Password"
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            fullWidth
-            margin="normal"
-            required
-            error={!!errors.password}
-            helperText={errors.password}
-          />
           <ToggleButtonGroup
             value={role}
             exclusive
@@ -184,7 +160,7 @@ function MyModal() {
               marginBottom: 4,
             }}
           >
-            <CustomToggleButton value="admin" selected={role === "admin"}>
+            <CustomToggleButton value="Admin" selected={role === "Admin"}>
               Admin
             </CustomToggleButton>
             <CustomToggleButton
@@ -208,11 +184,73 @@ function MyModal() {
             }}
             onClick={handleSubmit}
           >
-            Submit
+            ADD User
           </Button>
         </Box>
       </Modal>
+      {errorapi && (
+        <Box p={1} fontSize="6px" color="red">
+          error : {errorapi}
+        </Box>
+      )}
     </div>
   );
 }
 export default MyModal;
+
+/*
+  const validateForm = () => {
+    const newErrors = { username: "", email: "", password: "" };
+
+    if (!username) {
+      newErrors.username = "Username is required.";
+    }
+
+    if (!email || !isValidEmail(email)) {
+      newErrors.email = "Invalid email address.";
+    }
+
+    setErrors(newErrors);
+
+    return !Object.values(newErrors).some((error) => error !== "");
+  };
+  const generateRandomPassword = (length: number) => {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      password += charset[randomIndex];
+    }
+    return password;
+  };
+*/
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*  const handleSubmit =async () => {
+    const isValid = validateForm();
+
+    if (isValid) {
+      console.log("Form submitted:", { username, email, role });
+     // handleClose();
+    }
+    const password = generateRandomPassword(12);
+   try{
+    const user : any =await signUp({
+      username: email,
+      password: password,
+      options: {
+        userAttributes: {
+          email: email,
+         name : username,
+         'custom:role': 'admin',
+        },
+      }
+    });
+    console.log('Sign-up successful' , user);
+  } catch (error) {
+    console.error('Error signing up:', error);
+  }
+
+  };*/
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
