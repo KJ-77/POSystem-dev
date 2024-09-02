@@ -77,7 +77,7 @@ export default function OrdersDataGrid() {
   useEffect(() => {
     const fetchOrders = async () => {
         try {
-          const response = await axios.get("http://localhost:3000/orders");
+          const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders");
           console.log("API Response:", response.data); // Log the response data
       
           const orders = response.data; // API response might be an array of objects
