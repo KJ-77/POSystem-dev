@@ -1,40 +1,10 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { DataGrid, GridColDef, GridRowParams, GridToolbar } from "@mui/x-data-grid";
-import OrderDetails from "./OrderDetails";
-import theme from "../../globalStyles";
+import OrderDetails from "./admin/OrderDetails";
+import theme from "../globalStyles";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-
-function createOrder(
-  id: number,
-  name: string,
-  orderby: string,
-  description: string,
-  unitprice: number,
-  quantity: number,
-  status: "pending" | "accepted" | "rejected",
-  date: string
-) {
-  return {
-    id,
-    orderby,
-    name,
-    description,
-    unitprice,
-    quantity,
-    status,
-    date,
-    totalprice: unitprice * quantity,
-  };
-}
-
-const initialRows = [
-  createOrder(1, "Laptop", "khalil01", "15 inch MacBook Pro", 799.99, 15, "accepted", "2023-12-20"),
-  createOrder(2, "Laptop", "khalil01", "15 inch MacBook Pro", 799.99, 15, "accepted", "2023-12-25"),
-  createOrder(3, "Phone", "khalil01", "iPhone 13 Pro Max", 599.99, 1, "pending", "2023-12-20"),
-  createOrder(4, "Tablet", "khalil01", "iPad Pro 11 inch", 399.99, 3, "accepted", "2023-12-15"),
-  createOrder(5, "Headphones", "khalil01", "Sony WH-1000XM4 Noise-Canceling Headphones", 199.99, 4, "rejected", "2023-12-10"),
-];
+import axios from "axios"; // Use axios for API requests
 
 const columns: GridColDef[] = [
   {
@@ -97,12 +67,37 @@ const columns: GridColDef[] = [
 ];
 
 export default function OrdersDataGrid() {
-  const [rows, setRows] = useState(initialRows);
+  const [rows, setRows] = useState<any[]>([]);
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<string>("");
   const [filtername, setFiltername] = useState("All");
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+        try {
+          const response = await axios.get("http://localhost:3000/orders/1");
+          console.log("API Response:", response.data); // Log the response data
+      
+          const orders = response.data; // API response might be an array of objects
+          const formattedOrders = orders.map((order,index) => ({
+            id:index,
+            name: order.order_name,
+            orderby: order.user_fullname,
+            description: order.order_desc,
+            totalprice: order.total_price,
+            status: order.order_status,
+            date: new Date(order.order_date).toLocaleDateString(),
+          }));
+          setRows(formattedOrders);
+        } catch (error) {
+          console.error("Error fetching orders:", error);
+        }
+      };
+
+    fetchOrders();
+  }, []);
 
   const handleRowClick = (params: GridRowParams) => {
     setSelectedRow(params.row);
@@ -157,7 +152,6 @@ export default function OrdersDataGrid() {
       <DataGrid
         rows={filteredRows}
         columns={columns}
-        //@ts-ignore
         pageSize={5}
         rowsPerPageOptions={[5, 10, 20]}
         disableSelectionOnClick

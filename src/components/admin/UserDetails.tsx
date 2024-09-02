@@ -13,6 +13,7 @@ import theme from "../../globalStyles";
 import ConfirmationDelete from "./ConfirmationDelete"
 import { useState } from "react";
 import TransitionsModal from "./EditUser";
+import { useNavigate } from "react-router-dom";
 interface OrderDetails {
   id: number;
   username: string;
@@ -30,14 +31,33 @@ const UserDetails: React.FC<OrderDetails> = ({
   isopen,
   setisopen,
 }) => {
+  
+    const navigate = useNavigate();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleDialogClose = () => {
         setIsDialogOpen(false);
       };
-    const handleConfirmDelete = () => {
+    const handleConfirmDelete = async() => {
         
-        window.alert('User deleted');
+      try {
+        const response = await fetch(`https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/user/${id}`, {
+          method: 'DELETE',
+
+        });
+    
+        if (response.ok) {
+          console.log('User deleted successfully:');
+          navigate(0);
+          
+        } else {
+          console.error('Failed to delete user:', response.statusText);
+         
+        }
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        // Handle the network error, show a message to the user, etc.
+      }
       };
   return (
     <>
@@ -103,10 +123,10 @@ const UserDetails: React.FC<OrderDetails> = ({
       </Button>
       <ConfirmationDelete
         open={isDialogOpen}
-        onClose={handleDialogClose}
+       onClose={handleDialogClose}
         onConfirm={handleConfirmDelete}
       />
-      <TransitionsModal />
+      <TransitionsModal id={id} />
               <CustomButton onClick={() => setisopen(false)}>
                 Close
               </CustomButton>

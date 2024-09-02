@@ -41,7 +41,7 @@ const NotFoundPage: React.FC = () => {
         }}
         onClick={handleBackToHome}
       >
-        Back to Home
+        Back to Sign-Up
       </Button>
     </Container>
   );
