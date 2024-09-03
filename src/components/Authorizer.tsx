@@ -14,13 +14,7 @@ const columns: GridColDef[] = [
     align: "center",
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Order Name</strong>,
   },
-  {
-    field: "orderby",
-    flex: 1,
-    headerAlign: "center",
-    align: "center",
-    renderHeader: () => <strong style={{ color: "#002a2f" }}>Order By</strong>,
-  },
+  
   {
     field: "description",
     flex: 2,
