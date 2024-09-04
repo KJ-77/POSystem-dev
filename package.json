@@ -17,7 +17,7 @@
     "@fontsource/lato": "^5.0.22",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
-    "@mui/x-data-grid": "^7.14.0",
+    "@mui/x-data-grid": "^7.15.0",
     "amazon-cognito-identity-js": "^6.3.12",
     "aws-amplify": "^6.5.3",
     "aws-sdk": "^2.1687.0",

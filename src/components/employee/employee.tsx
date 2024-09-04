@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { DataGrid, GridColDef, GridRowParams, GridToolbar } from "@mui/x-data-grid";
-import OrderDetails from "./admin/OrderDetails";
-import theme from "../globalStyles";
+import OrderDetails from "./orderdt"; // Ensure correct import
+import theme from "../../globalStyles";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios"; // Use axios for API requests
@@ -70,17 +70,20 @@ export default function OrdersDataGrid() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders/1");
+        const response = await axios.get("http://localhost:3000/orders/1");
         console.log("API Response:", response.data); // Log the response data
         
         const orders = response.data; // API response might be an array of objects
-        const formattedOrders = orders.map((order, index) => ({
+        const formattedOrders = orders.map((order:any, index:any) => ({
           id: index,
           name: order.order_name,
-          orderby: order.user_fullname,
           description: order.order_desc,
           totalprice: order.total_price,
+          quantity:order.quantity,
+          unit_price:order.unit_price,
           status: order.order_status,
+          reason:order.reason,
+          
           date: new Date(order.order_date).toLocaleDateString(),
         }));
         setRows(formattedOrders);
@@ -96,15 +99,7 @@ export default function OrdersDataGrid() {
     setSelectedRow(params.row);
     setOpen(true);
   };
-
-  const updateStatus = (id: number, newStatus: "pending" | "accepted" | "rejected") => {
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id ? { ...row, status: newStatus } : row
-      )
-    );
-  };
-
+  
   const filteredRows = rows.filter(
     (row) =>
       row.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -146,11 +141,10 @@ export default function OrdersDataGrid() {
         <DataGrid
           rows={filteredRows}
           columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[10, 20, 50]}
-          disableSelectionOnClick
-          components={{
-            Toolbar: GridToolbar,
+          pageSizeOptions={[5, 10, 25]}
+          disableRowSelectionOnClick 
+          slots={{
+            toolbar: GridToolbar, // Use lowercase key if necessary
           }}
           sx={{
             color: theme.palette.text.primary,
@@ -171,15 +165,15 @@ export default function OrdersDataGrid() {
         <OrderDetails
           id={selectedRow.id}
           name={selectedRow.name}
-          orderby={selectedRow.orderby}
-          unitprice={selectedRow.unitprice}
-          quantity={selectedRow.quantity}
           description={selectedRow.description}
           status={selectedRow.status}
           date={selectedRow.date}
-          isopen={open}
-          setisopen={setOpen}
-          updateStatus={updateStatus}
+          quantity={selectedRow.quantity} // Ensure this prop is provided if used
+          unit_price={selectedRow.unit_price}
+          totalPrice={selectedRow.totalprice}
+          reason={selectedRow.reason} // Ensure this prop is provided if used
+          isOpen={open}
+          onClose={() => setOpen(false)}
         />
       )}
     </Box>

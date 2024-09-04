@@ -5,7 +5,7 @@ export default function admin() {
 
   return (<>
   <TitleBar role="Authorizer"/>
-  <Authorizer/>;
+  <Authorizer/>
   </>
     
   )

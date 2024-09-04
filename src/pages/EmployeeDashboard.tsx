@@ -1,7 +1,7 @@
 import React from 'react';
 import TitleBar from "../components/TitleBar";
 
-import Employee from '../components/employee';
+import Employee from '../components/employee/employee';
 const EmployeeDashboard: React.FC = () => {
   return (
 
