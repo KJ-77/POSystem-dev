@@ -1,35 +1,57 @@
-import { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import React, { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRowParams, GridToolbar } from "@mui/x-data-grid";
-import OrderDetails from "./admin/OrderDetails";
+import AthorizerDetails from "./AuthorizerDetails";
 import theme from "../globalStyles";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import axios from "axios"; // Use axios for API requests
+import axios from 'axios';
+import Loading from "./Loading";
+
+
+interface Orders {
+  ID: string;
+  order_name: string;
+  order_desc: string;
+  link: string;
+  price_diff: any;
+  order_status: string;
+  order_date: string;
+  quantity: number;
+  unit_price: number;
+  total_price:number;
+  reason:string;
+  analysis:string;
+  score:number;
+  worker_id:string;
+  user_fullname:string;
+}
+
 
 const columns: GridColDef[] = [
   {
-    field: "name",
+    field: "order_name",
     flex: 1,
     headerAlign: "center",
     align: "center",
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Order Name</strong>,
   },
   {
-    field: "orderby",
+    field: "user_fullname",
     flex: 1,
     headerAlign: "center",
     align: "center",
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Order By</strong>,
   },
   {
-    field: "description",
+    field: "order_desc",
     flex: 2,
     headerAlign: "center",
     align: "center",
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Description</strong>,
   },
   {
-    field: "totalprice",
+    field: "total_price",
     type: "number",
     flex: 1,
     headerAlign: "center",
@@ -37,7 +59,7 @@ const columns: GridColDef[] = [
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Total Price</strong>,
   },
   {
-    field: "status",
+    field: "order_status",
     flex: 1,
     headerAlign: "center",
     align: "center",
@@ -47,7 +69,7 @@ const columns: GridColDef[] = [
       return (
         <div
           style={{
-            color: value === "accepted" ? "green" : value === "rejected" ? "red" : "blue",
+            color: value === "Accepted" ? "green" : value === "Rejected" ? "red" : "blue",
             fontWeight: "bold",
             textAlign: "center",
           }}
@@ -58,7 +80,7 @@ const columns: GridColDef[] = [
     },
   },
   {
-    field: "date",
+    field: "order_date",
     flex: 1,
     headerAlign: "center",
     align: "center",
@@ -66,59 +88,54 @@ const columns: GridColDef[] = [
   },
 ];
 
-export default function OrdersDataGrid() {
-  const [rows, setRows] = useState<any[]>([]);
+
+
+export default function Authorizer() {
+
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<string>("");
   const [filtername, setFiltername] = useState("All");
   const [open, setOpen] = useState(false);
+  const [orders, setOrders] = useState<Orders[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
 
   useEffect(() => {
     const fetchOrders = async () => {
-        try {
-          const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders");
-          console.log("API Response:", response.data); // Log the response data
-      
-          const orders = response.data; // API response might be an array of objects
-          const formattedOrders = orders.map((order,index) => ({
-            id:index,
-            name: order.order_name,
-            orderby: order.user_fullname,
-            description: order.order_desc,
-            totalprice: order.total_price,
-            status: order.order_status,
-            date: new Date(order.order_date).toLocaleDateString(),
-          }));
-          setRows(formattedOrders);
-        } catch (error) {
-          console.error("Error fetching orders:", error);
-        }
-      };
-
+      try {
+        const response = await axios.get('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders');
+        const ordersWithId = response.data.map((orders: any, index: number) => ({
+          ...orders,
+          id: orders.ID || index.toString(), 
+        }));
+         setOrders(ordersWithId);
+      } catch (err ) {
+       // setError('Failed to fetch users');
+       console.log(err)
+      } finally {
+        setLoading(false);
+      }
+    };
+  
     fetchOrders();
   }, []);
+
 
   const handleRowClick = (params: GridRowParams) => {
     setSelectedRow(params.row);
     setOpen(true);
   };
 
-  const updateStatus = (id: number, newStatus: "pending" | "accepted" | "rejected") => {
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id ? { ...row, status: newStatus } : row
-      )
-    );
-  };
-
-  const filteredRows = rows.filter(
+  const filteredRows = orders.filter(
     (row) =>
-      row.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filter === "" || row.status.toLowerCase() === filter.toLowerCase())
+      row.user_fullname.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (filter === "" || row.order_status.toLowerCase() === filter.toLowerCase())
   );
 
   return (
+    <>
+   {loading ? (<Loading/>) : (
     <div style={{ height: 400, width: "100%" }}>
       <Box display="flex" alignItems="center" gap={2} mb={3}>
         <SearchIcon style={{ color: theme.palette.primary.main }} />
@@ -152,6 +169,7 @@ export default function OrdersDataGrid() {
       <DataGrid
         rows={filteredRows}
         columns={columns}
+        //@ts-ignore
         pageSize={5}
         rowsPerPageOptions={[5, 10, 20]}
         disableSelectionOnClick
@@ -173,20 +191,25 @@ export default function OrdersDataGrid() {
         onRowClick={handleRowClick}
       />
       {selectedRow && (
-        <OrderDetails
+        <AthorizerDetails
           id={selectedRow.id}
-          name={selectedRow.name}
-          orderby={selectedRow.orderby}
-          unitprice={selectedRow.unitprice}
+          name={selectedRow.order_name}
+          orderby={selectedRow.user_fullname}
+          unitprice={selectedRow.unit_price}
           quantity={selectedRow.quantity}
-          description={selectedRow.description}
-          status={selectedRow.status}
-          date={selectedRow.date}
+          description={selectedRow.order_desc}
+          status={selectedRow.order_status}
+          date={selectedRow.order_date}
+          link={selectedRow.link}
+          price_diff={selectedRow.price_diff}
+          analysis={selectedRow.analysis}
+          score={selectedRow.score}
           isopen={open}
+          worker_id={selectedRow.worker_id}
           setisopen={setOpen}
-          updateStatus={updateStatus}
         />
       )}
-    </div>
+    </div>)}
+    </>
   );
 }

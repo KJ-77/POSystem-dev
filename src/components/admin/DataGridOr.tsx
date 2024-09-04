@@ -1,65 +1,57 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import React, { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRowParams, GridToolbar } from "@mui/x-data-grid";
 import OrderDetails from "./OrderDetails";
 import theme from "../../globalStyles";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import axios from 'axios';
+import Loading from "../Loading";
 
-function createOrder(
-  id: number,
-  name: string,
-  orderby: string,
-  description: string,
-  unitprice: number,
-  quantity: number,
-  status: "pending" | "accepted" | "rejected",
-  date: string
-) {
-  return {
-    id,
-    orderby,
-    name,
-    description,
-    unitprice,
-    quantity,
-    status,
-    date,
-    totalprice: unitprice * quantity,
-  };
+
+interface Orders {
+  ID: string;
+  order_name: string;
+  order_desc: string;
+  link: string;
+  price_diff: any;
+  order_status: string;
+  order_date: string;
+  quantity: number;
+  unit_price: number;
+  total_price:number;
+  reason:null;
+  analysis:string;
+  score:null;
+  worker_id:string;
+  user_fullname:string;
 }
 
-const initialRows = [
-  createOrder(1, "Laptop", "khalil01", "15 inch MacBook Pro", 799.99, 15, "accepted", "2023-12-20"),
-  createOrder(2, "Laptop", "khalil01", "15 inch MacBook Pro", 799.99, 15, "accepted", "2023-12-25"),
-  createOrder(3, "Phone", "khalil01", "iPhone 13 Pro Max", 599.99, 1, "pending", "2023-12-20"),
-  createOrder(4, "Tablet", "khalil01", "iPad Pro 11 inch", 399.99, 3, "accepted", "2023-12-15"),
-  createOrder(5, "Headphones", "khalil01", "Sony WH-1000XM4 Noise-Canceling Headphones", 199.99, 4, "rejected", "2023-12-10"),
-];
 
 const columns: GridColDef[] = [
   {
-    field: "name",
+    field: "order_name",
     flex: 1,
     headerAlign: "center",
     align: "center",
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Order Name</strong>,
   },
   {
-    field: "orderby",
+    field: "user_fullname",
     flex: 1,
     headerAlign: "center",
     align: "center",
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Order By</strong>,
   },
   {
-    field: "description",
+    field: "order_desc",
     flex: 2,
     headerAlign: "center",
     align: "center",
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Description</strong>,
   },
   {
-    field: "totalprice",
+    field: "total_price",
     type: "number",
     flex: 1,
     headerAlign: "center",
@@ -67,17 +59,18 @@ const columns: GridColDef[] = [
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Total Price</strong>,
   },
   {
-    field: "status",
+    field: "order_status",
     flex: 1,
     headerAlign: "center",
     align: "center",
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Status</strong>,
     renderCell: (params) => {
       const { value } = params;
+      
       return (
         <div
           style={{
-            color: value === "accepted" ? "green" : value === "rejected" ? "red" : "blue",
+            color: value === "Accepted" ? "green" : value === "Rejected" ? "red" : "blue",
             fontWeight: "bold",
             textAlign: "center",
           }}
@@ -88,7 +81,7 @@ const columns: GridColDef[] = [
     },
   },
   {
-    field: "date",
+    field: "order_date",
     flex: 1,
     headerAlign: "center",
     align: "center",
@@ -96,34 +89,55 @@ const columns: GridColDef[] = [
   },
 ];
 
+
+
 export default function OrdersDataGrid() {
-  const [rows, setRows] = useState(initialRows);
+
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<string>("");
   const [filtername, setFiltername] = useState("All");
   const [open, setOpen] = useState(false);
+  const [orders, setOrders] = useState<Orders[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders');
+        
+        const ordersWithId = response.data.map((orders: any, index: number) => ({
+          ...orders,
+          id: orders.ID || index.toString(), 
+        }));
+         setOrders(ordersWithId);
+      } catch (err ) {
+       // setError('Failed to fetch users');
+       console.log(err)
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchOrders();
+  }, []);
+
 
   const handleRowClick = (params: GridRowParams) => {
     setSelectedRow(params.row);
     setOpen(true);
   };
 
-  const updateStatus = (id: number, newStatus: "pending" | "accepted" | "rejected") => {
-    setRows((prevRows) =>
-      prevRows.map((row) =>
-        row.id === id ? { ...row, status: newStatus } : row
-      )
-    );
-  };
-
-  const filteredRows = rows.filter(
+  const filteredRows = orders.filter(
     (row) =>
-      row.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filter === "" || row.status.toLowerCase() === filter.toLowerCase())
+      row.user_fullname.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (filter === "" || row.order_status.toLowerCase() === filter.toLowerCase())
   );
 
   return (
+    <>
+   {loading ? (<Loading/>) : (
     <div style={{ height: 400, width: "100%" }}>
       <Box display="flex" alignItems="center" gap={2} mb={3}>
         <SearchIcon style={{ color: theme.palette.primary.main }} />
@@ -180,19 +194,20 @@ export default function OrdersDataGrid() {
       />
       {selectedRow && (
         <OrderDetails
-          id={selectedRow.id}
-          name={selectedRow.name}
-          orderby={selectedRow.orderby}
-          unitprice={selectedRow.unitprice}
+          name={selectedRow.order_name}
+          orderby={selectedRow.user_fullname}
+          unitprice={selectedRow.unit_price}
           quantity={selectedRow.quantity}
-          description={selectedRow.description}
-          status={selectedRow.status}
-          date={selectedRow.date}
+          description={selectedRow.order_desc}
+          status={selectedRow.order_status}
+          date={selectedRow.order_date}
+          link={selectedRow.link}
+          reason={selectedRow.reason}
           isopen={open}
           setisopen={setOpen}
-          updateStatus={updateStatus}
         />
       )}
-    </div>
+    </div>)}
+    </>
   );
 }

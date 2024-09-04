@@ -10,7 +10,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import UserDetails from "./UserDetails";
 import axios from 'axios';
-import Loading from "../loading";
+import Loading from "../Loading";
 import AddUser from "./AddUser"
 
 //"ID":2,"FULLNAME":"Jane Smith","":"jane.smith@example.com","position":"admin","status":"working"

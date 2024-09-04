@@ -74,7 +74,6 @@ function MyModal() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            ID: "124",
             FULLNAME: username,
             email: email,
             position: role,
