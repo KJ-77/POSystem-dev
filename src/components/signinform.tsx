@@ -17,6 +17,7 @@ import {signIn, signOut, type SignInInput, getCurrentUser, fetchAuthSession} fro
 import { Amplify, type ResourcesConfig } from 'aws-amplify';
 import { defaultStorage } from 'aws-amplify/utils';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
+import { useEffect } from 'react';
 
 // async function currentAuthenticatedUser() {
 //   try {
@@ -92,19 +93,29 @@ async function handleSignIn(
     if (role === "Admin" ) navigate("/admin");
     if (role === "Authorizer" ) navigate("/Authorizer");
     if (role === "Employee" ) navigate("/EmployeeDashboard");
-
-
-
-      
+ 
   } catch (error) {
     console.log("Error signing in:", error);
   }
 }
 
+function checkSignIn(navigate: (path: string) => void){
+  if (!localStorage.getItem('role')){ 
+    navigate("/");
+    return;
+  }
+  if (localStorage.getItem('role') === "Admin" ) navigate("/admin");
+  if (localStorage.getItem('role') === "Authorizer" ) navigate("/Authorizer");
+  if (localStorage.getItem('role') === "Employee" ) navigate("/EmployeeDashboard");
+}
 
 export default function SignInSide() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    checkSignIn(navigate);
+  }, []);
+  
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -115,6 +126,7 @@ export default function SignInSide() {
     } catch (error) {
       console.log("Error signing in", error);
     }
+    
   };
 
   return (
