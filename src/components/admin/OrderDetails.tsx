@@ -1,63 +1,45 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
   Typography,
 } from "@mui/material";
-import CustomButton from "../../CustomStyle/CustomButton";
+
+
 
 interface OrderDetailsProps {
-  id: number;
   name: string;
   orderby: string;
   unitprice: number;
   quantity: number;
   description: string;
-  status: "pending" | "accepted" | "rejected";
+  link: string;
+  reason: string;
+  status: "Pending" | "Accepted" | "Rejected";
   date: string;
   isopen: boolean;
   setisopen: (isOpen: boolean) => void;
-  updateStatus: (id: number, newStatus: "pending" | "accepted" | "rejected") => void;
 }
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "pending":
-      return "blue";
-    case "accepted":
-      return "green";
-    case "rejected":
-      return "red";
-    default:
-      return "black";
-  }
-};
 
 const OrderDetails: React.FC<OrderDetailsProps> = ({
-  id,
+
   name,
   orderby,
   unitprice,
   quantity,
   description,
+  link,
+  reason,
   status,
   date,
   isopen,
   setisopen,
-  updateStatus,
 }) => {
-  const [newStatus, setNewStatus] = useState<"pending" | "accepted" | "rejected">(status);
 
-  const handleSave = () => {
-    if (newStatus !== status) {
-      updateStatus(id, newStatus);
-    }
-    setisopen(false);
-  };
 
   return (
     <Dialog open={isopen} onClose={() => setisopen(false)} maxWidth="sm" fullWidth>
@@ -81,7 +63,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
         <Divider />
         <Box mt={2} mb={2}>
           <Typography variant="body1">
-            <strong>Unit Price:</strong> ${unitprice.toFixed(2)}
+            <strong>Unit Price:</strong> ${unitprice}
           </Typography>
         </Box>
         <Divider />
@@ -93,7 +75,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
         <Divider />
         <Box mt={2} mb={2}>
           <Typography variant="body1">
-            <strong>Total Price:</strong> ${(unitprice * quantity).toFixed(2)}
+            <strong>Total Price:</strong> ${(unitprice * quantity)}
           </Typography>
         </Box>
         <Divider />
@@ -103,12 +85,9 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
           </Typography>
         </Box>
         <Divider />
-        <Box mt={2} mb={2} sx={{ display: "flex" }}>
-          <Typography variant="body1" mr={2}>
-            <strong>Status: </strong>
-          </Typography>
-          <Typography variant="body1" sx={{ color: getStatusColor(newStatus) }}>
-            {newStatus}
+        <Box mt={2} mb={2}>
+          <Typography variant="body1">
+            <strong>Link of order: </strong> {link}
           </Typography>
         </Box>
         <Divider />
@@ -117,21 +96,32 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
             <strong>Date:</strong> {date}
           </Typography>
         </Box>
-        {status === "pending" && (
-          <Box mt={2} sx={{ display: "flex", gap: 1 }}>
-            <CustomButton variant="contained" color="success" onClick={() => setNewStatus("accepted")}>
-              Accept
-            </CustomButton>
-            <CustomButton variant="contained" color="error" onClick={() => setNewStatus("rejected")}>
-              Reject
-            </CustomButton>
+        <Divider />
+        <Box mt={2} mb={2} sx={{ display: "flex" }}>
+          <Typography variant="body1" mr={2}>
+            <strong>Status: </strong>
+          </Typography>
+          <Typography variant="body1" sx={{  color: status === "Rejected" ? 'red' : status === "Accepted" ? 'green' : 'blue'  }}>
+          <strong> {status}</strong>
+          </Typography>
+          
+        </Box>
+        <Divider />
+        {status === "Rejected" && (
+          <Box mt={2} mb={2}>
+            <Typography variant="h6" mr={2} mb={1} sx={{ color: "#005858" }}>
+            <strong>Reason:  </strong>
+          </Typography>
+           <Typography variant="body1"  sx={{ color: "#005858", fontSize: '1rem' }}>\
+            <strong>
+            fewjefiowjoifwej qwindowind  qwondwqoin qwdojdwoinqwdj  qwd-ojwfj qwfjikqwf
+            </strong>
+          </Typography>
+            
           </Box>
         )}
       </DialogContent>
-      <DialogActions sx={{ justifyContent: "space-between" }}>
-        <CustomButton onClick={handleSave} sx={{ alignSelf: "flex-start" }}>Save</CustomButton>
-        <CustomButton onClick={() => setisopen(false)}>Close</CustomButton>
-      </DialogActions>
+
     </Dialog>
   );
 };
