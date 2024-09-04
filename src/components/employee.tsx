@@ -15,13 +15,6 @@ const columns: GridColDef[] = [
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Order Name</strong>,
   },
   {
-    field: "orderby",
-    flex: 1,
-    headerAlign: "center",
-    align: "center",
-    renderHeader: () => <strong style={{ color: "#002a2f" }}>Order By</strong>,
-  },
-  {
     field: "description",
     flex: 2,
     headerAlign: "center",
@@ -76,25 +69,30 @@ export default function OrdersDataGrid() {
 
   useEffect(() => {
     const fetchOrders = async () => {
-        try {
-          const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders/1");
-          console.log("API Response:", response.data); // Log the response data
-      
-          const orders = response.data; // API response might be an array of objects
-          const formattedOrders = orders.map((order,index) => ({
-            id:index,
-            name: order.order_name,
-            orderby: order.user_fullname,
-            description: order.order_desc,
-            totalprice: order.total_price,
-            status: order.order_status,
-            date: new Date(order.order_date).toLocaleDateString(),
-          }));
-          setRows(formattedOrders);
-        } catch (error) {
-          console.error("Error fetching orders:", error);
-        }
-      };
+      try {
+        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders/1", {   
+          method: 'GET',
+          headers: {
+            Authorization: localStorage.getItem('idtoken')
+          }
+        }); 
+        console.log("API Response:", response.data); // Log the response data
+        
+        const orders = response.data; // API response might be an array of objects
+        const formattedOrders = orders.map((order, index) => ({
+          id: index,
+          name: order.order_name,
+          orderby: order.user_fullname,
+          description: order.order_desc,
+          totalprice: order.total_price,
+          status: order.order_status,
+          date: new Date(order.order_date).toLocaleDateString(),
+        }));
+        setRows(formattedOrders);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
 
     fetchOrders();
   }, []);
@@ -119,8 +117,8 @@ export default function OrdersDataGrid() {
   );
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
-      <Box display="flex" alignItems="center" gap={2} mb={3}>
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2 }}>
+      <Box display="flex" alignItems="center" gap={2} mb={3} sx={{ width: '90%' }}>
         <SearchIcon style={{ color: theme.palette.primary.main }} />
         <TextField
           label="Search"
@@ -149,29 +147,31 @@ export default function OrdersDataGrid() {
           </Select>
         </Box>
       </Box>
-      <DataGrid
-        rows={filteredRows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5, 10, 20]}
-        disableSelectionOnClick
-        components={{
-          Toolbar: GridToolbar,
-        }}
-        sx={{
-          color: theme.palette.text.primary,
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: theme.palette.background.paper,
+      <Box sx={{ flexGrow: 1, width: '90%' }}>
+        <DataGrid
+          rows={filteredRows}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10, 20, 50]}
+          disableSelectionOnClick
+          components={{
+            Toolbar: GridToolbar,
+          }}
+          sx={{
             color: theme.palette.text.primary,
-            fontWeight: "bold",
-          },
-          "& .MuiDataGrid-cell": {
-            color: theme.palette.text.primary,
-            textAlign: "center",
-          },
-        }}
-        onRowClick={handleRowClick}
-      />
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: theme.palette.background.paper,
+              color: theme.palette.text.primary,
+              fontWeight: "bold",
+            },
+            "& .MuiDataGrid-cell": {
+              color: theme.palette.text.primary,
+              textAlign: "center",
+            },
+          }}
+          onRowClick={handleRowClick}
+        />
+      </Box>
       {selectedRow && (
         <OrderDetails
           id={selectedRow.id}
@@ -187,6 +187,6 @@ export default function OrdersDataGrid() {
           updateStatus={updateStatus}
         />
       )}
-    </div>
+    </Box>
   );
 }
