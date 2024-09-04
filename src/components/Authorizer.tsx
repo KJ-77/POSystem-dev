@@ -5,6 +5,7 @@ import theme from "../globalStyles";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from "axios"; // Use axios for API requests
+import { idToken } from "./signinform";
 
 const columns: GridColDef[] = [
   {
@@ -69,25 +70,30 @@ export default function OrdersDataGrid() {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      try {
-        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders");
-        console.log("API Response:", response.data); // Log the response data
-
-        const orders = response.data; // API response might be an array of objects
-        const formattedOrders = orders.map((order, index) => ({
-          id: index,
-          name: order.order_name,
-          orderby: order.user_fullname,
-          description: order.order_desc,
-          totalprice: order.total_price,
-          status: order.order_status,
-          date: new Date(order.order_date).toLocaleDateString(),
-        }));
-        setRows(formattedOrders);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      }
-    };
+        try {
+          console.log(idToken);
+          const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders", {   
+            method: 'GET',
+            headers: {
+              Authorization: localStorage.getItem('idtoken')
+            }
+          });
+          console.log("API Response:", response.data); // Log the response data
+          const orders = response.data; // API response might be an array of objects
+          const formattedOrders = orders.map((order,index) => ({
+            id:index,
+            name: order.order_name,
+            orderby: order.user_fullname,
+            description: order.order_desc,
+            totalprice: order.total_price,
+            status: order.order_status,
+            date: new Date(order.order_date).toLocaleDateString(),
+          }));
+          setRows(formattedOrders);
+        } catch (error) {
+          console.error("Error fetching orders:", error);
+        }
+      };
 
     fetchOrders();
   }, []);

@@ -86,7 +86,12 @@ export default function UsersDataGrid() {
   useEffect(() => {
     const fetchUserss = async () => {
       try {
-        const response = await axios.get('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/users');
+        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/users", {   
+          method: 'GET',
+          headers: {
+            Authorization: localStorage.getItem('idtoken')
+          }
+        });
         
         const userssWithId = response.data.map((users: any, index: number) => ({
           ...users,
