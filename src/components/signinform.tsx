@@ -37,8 +37,8 @@ import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 // async function currentSession() {
 //   try {
 //     const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
-//     console.log(accessToken);
-//     console.log(idToken);
+//     console.log("access token: "+ accessToken);
+//     console.log("idToken: "+ idToken);
 //   } catch (err) {
 //     console.log(err);
 //   }
@@ -51,6 +51,8 @@ const defaultTheme = createTheme({
     },
   },
 });
+
+export const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
 
 async function handleSignIn(
   { username, password }: SignInInput,
@@ -79,14 +81,14 @@ async function handleSignIn(
       console.log("Navigating to confirmation page");
       navigate('/confirmation');
     }
-
     const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
     const idTokenPayload = idToken?.payload;
     //@ts-ignore
     const role = idTokenPayload["cognito:groups"][0];
     localStorage.setItem('access', 'true');
     localStorage.setItem('role', role);
-
+    localStorage.setItem('idtoken', (idToken as unknown as string));
+    
     if (role === "Admin" ) navigate("/admin");
     if (role === "Authorizer" ) navigate("/Authorizer");
     if (role === "Employee" ) navigate("/EmployeeDashboard");
