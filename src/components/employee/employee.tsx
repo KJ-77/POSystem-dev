@@ -37,10 +37,17 @@ const columns: GridColDef[] = [
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Status</strong>,
     renderCell: (params) => {
       const { value } = params;
+      let color = "blue"; // Default color for "Pending"
+      
+      if (value === "Accepted") {
+        color = "green";
+      } else if (value === "Rejected") {
+        color = "red";
+      }
       return (
         <div
           style={{
-            color: value === "accepted" ? "green" : value === "rejected" ? "red" : "blue",
+            color: color,
             fontWeight: "bold",
             textAlign: "center",
           }}
@@ -58,7 +65,6 @@ const columns: GridColDef[] = [
     renderHeader: () => <strong style={{ color: "#002a2f" }}>Date</strong>,
   },
 ];
-
 export default function OrdersDataGrid() {
   const [rows, setRows] = useState<any[]>([]);
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -76,9 +82,9 @@ export default function OrdersDataGrid() {
             Authorization: localStorage.getItem('idtoken')
           }
         }); 
-        console.log("API Response:", response.data); // Log the response data
+        console.log("API Response:", response.data); 
         
-        const orders = response.data; // API response might be an array of objects
+        const orders = response.data; 
         const formattedOrders = orders.map((order:any, index:any) => ({
           id: index,
           name: order.order_name,
