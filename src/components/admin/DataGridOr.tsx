@@ -104,7 +104,14 @@ export default function OrdersDataGrid() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders');
+        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders", {   
+          method: 'GET',
+          headers: {
+            Authorization: localStorage.getItem('idtoken') || ''
+          }
+        });
+        
+        //const response = await axios.get(');
         
         const ordersWithId = response.data.map((orders: any, index: number) => ({
           ...orders,
