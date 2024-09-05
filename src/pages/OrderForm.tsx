@@ -14,7 +14,6 @@ export default function FormPropsTextFields() {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  // Handle form field changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -23,14 +22,13 @@ export default function FormPropsTextFields() {
     });
   };
 
-  // Check if all fields are filled
+
   const isFormValid = () => {
     return Object.values(formData).every(value => value !== '');
   };
 
-  // Handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent the default form submission behavior
+    event.preventDefault(); 
 
     try {
       const response = await fetch('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/createorders/2488a4d8-d081-7092-4da6-521d83f22764', {
@@ -43,7 +41,6 @@ export default function FormPropsTextFields() {
 
       if (response.ok) {
         setSubmitted(true);
-        // Optionally, reset the form
         setFormData({
           order_name: '',
           unit_price: '',
@@ -133,7 +130,7 @@ export default function FormPropsTextFields() {
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!isFormValid()} // Disable button if form is not valid
+            disabled={!isFormValid()} 
           >
             Submit
           </Button>
