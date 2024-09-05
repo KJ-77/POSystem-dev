@@ -148,7 +148,7 @@ export default function OrdersDataGrid() {
           </Select>
         </Box>
       </Box>
-      <Box sx={{ flexGrow: 1, width: '90%' }}>
+      <Box sx={{ flexGrow: 1, width: '90%'}}>
         <DataGrid
           rows={filteredRows}
           columns={columns}

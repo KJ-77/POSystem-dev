@@ -25,13 +25,13 @@ const drawerWidth = 240;
 
 const TitleBar: React.FC<Props> = ({ window, role }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const navigate = useNavigate(); 
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
   const getNavItems = (role: Props['role']) => {
-    const navigate = useNavigate(); 
     const handleLogout = () => {
       console.log("HandleLogout");
       localStorage.clear();
@@ -68,10 +68,15 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
       <List>
         {navItems.map((item) => (
           <ListItem key={item.name} disablePadding>
-            {/* @ts-ignore */}
-            <ListItemButton sx={{ textAlign: 'center' }} component={Link} to={item.path}>
-              <ListItemText primary={item.name} />
-            </ListItemButton>
+            {item.onclick ? (
+              <ListItemButton sx={{ textAlign: 'center' }} onClick={item.onclick}>
+                <ListItemText primary={item.name} />
+              </ListItemButton>
+            ) : (
+              <ListItemButton sx={{ textAlign: 'center' }} component={Link} to={item.path}>
+                <ListItemText primary={item.name} />
+              </ListItemButton>
+            )}
           </ListItem>
         ))}
       </List>
@@ -128,8 +133,6 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
         </Toolbar>
       </AppBar>
       <nav>
-
-
         <Drawer
           container={container}
           variant="temporary"

@@ -32,7 +32,6 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
   quantity,
   description,
   link,
-  reason,
   status,
   date,
   isopen,

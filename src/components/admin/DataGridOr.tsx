@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRowParams, GridToolbar } from "@mui/x-data-grid";
 import OrderDetails from "./OrderDetails";
 import theme from "../../globalStyles";
@@ -7,7 +7,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from 'axios';
 import Loading from "../Loading";
-
 
 interface Orders {
   ID: string;
@@ -105,15 +104,14 @@ export default function OrdersDataGrid() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders',
-          {
-          
-              headers: {
-                Authorization: localStorage.getItem('idtoken')
-              }
-            
+        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders", {   
+          method: 'GET',
+          headers: {
+            Authorization: localStorage.getItem('idtoken') || ''
           }
-        );
+        });
+        
+        //const response = await axios.get(');
         
         const ordersWithId = response.data.map((orders: any, index: number) => ({
           ...orders,

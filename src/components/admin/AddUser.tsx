@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   Box,
   Button,
@@ -63,11 +63,7 @@ const handleEmailChange = (event: any) => {
   } 
 }
 
-  const handleRoleChange = (event: any, newRole: string) => {
-    if (newRole !== null) {
-      setRole(newRole);
-    }
-  };
+
 
   const handleSubmit = async () => {
     try {
@@ -182,10 +178,13 @@ const handleEmailChange = (event: any) => {
             error={!!errors.email}
             helperText={errors.email}
           />
+
+
           <ToggleButtonGroup
             value={role}
             exclusive
-            onChange={handleRoleChange}
+            onChange={(e : any) => { setRole(e.target.value) }}
+
             fullWidth
             sx={{
               marginTop: 4,

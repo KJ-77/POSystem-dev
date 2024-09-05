@@ -14,7 +14,6 @@ export default function FormPropsTextFields() {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  // Handle form field changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -23,7 +22,11 @@ export default function FormPropsTextFields() {
     });
   };
 
-  // Handle form submission
+
+  const isFormValid = () => {
+    return Object.values(formData).every(value => value !== '');
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevent the default form submission behavior
     const idToken = localStorage.getItem("idtoken");
@@ -39,7 +42,6 @@ export default function FormPropsTextFields() {
 
       if (response.ok) {
         setSubmitted(true);
-        // Optionally, reset the form
         setFormData({
           order_name: '',
           unit_price: '',
@@ -129,6 +131,7 @@ export default function FormPropsTextFields() {
             type="submit"
             variant="contained"
             color="primary"
+            disabled={!isFormValid()} 
           >
             Submit
           </Button>

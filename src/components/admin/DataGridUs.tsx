@@ -13,12 +13,11 @@ import axios from "axios";
 import Loading from "../Loading";
 import AddUser from "./AddUser";
 
-//"ID":2,"FULLNAME":"Jane Smith","":"jane.smith@example.com","position":"admin","status":"working"
 interface Users {
   id: string;
   FULLNAME: string;
   email: string;
-  position: string;
+  position: "Admin" | "Authorizer" | "Employee";
   status: string;
 }
 
@@ -72,47 +71,42 @@ const columns: GridColDef[] = [
 ];
 
 export default function UsersDataGrid() {
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRow, setSelectedRow] = useState<Users | null>(null);  // Explicit typing here
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("");
   const [filtername, setFiltername] = useState("All");
   const [open, setOpen] = useState(false);
-
   const [users, setUsers] = useState<Users[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   /*const [error, setError] = useState<string | null>(null);*/
 
   useEffect(() => {
-    const fetchUserss = async () => {
+    const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/users",
-          {
-            method: "GET",
-            headers: {
-              Authorization: localStorage.getItem("idtoken"),
-            },
+        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/users", {   
+          method: 'GET',
+          headers: {
+            Authorization: localStorage.getItem('idtoken') || ''
           }
-        );
-
-        const userssWithId = response.data.map((users: any, index: number) => ({
-          ...users,
-          id: users.ID || index.toString(), // Ensure each users has a unique id
+        });
+        
+        const usersWithId = response.data.map((user: any, index: number) => ({
+          ...user,
+          id: user.ID || index.toString(), // Ensure each user has a unique id
         }));
-        setUsers(userssWithId);
+        setUsers(usersWithId);
       } catch (err) {
-        // setError('Failed to fetch users');
         console.log(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserss();
+    fetchUsers();
   }, [open]);
 
   const handleRowClick = (params: GridRowParams) => {
-    setSelectedRow(params.row);
+    setSelectedRow(params.row as Users);  // Explicit type assertion here
     setOpen(true);
   };
 
@@ -138,7 +132,7 @@ export default function UsersDataGrid() {
               style={{ width: "25%" }}
             />
             <Box>
-              <InputLabel id="demo-simple-select-helper-label">Rule</InputLabel>
+              <InputLabel id="demo-simple-select-helper-label">Role</InputLabel>
               <Select
                 labelId="demo-simple-select-helper-label"
                 id="demo-simple-select-helper"
@@ -164,9 +158,8 @@ export default function UsersDataGrid() {
           <DataGrid
             rows={filteredRows}
             columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5, 10, 20]}
-            disableSelectionOnClick
+            pageSizeOptions={[5, 10, 25]}
+            disableRowSelectionOnClick
             slots={{
               toolbar: GridToolbar,
             }}

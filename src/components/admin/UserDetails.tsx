@@ -16,7 +16,7 @@ import React,{ useState } from "react";
 import TransitionsModal from "./EditUser";
 import { useNavigate } from "react-router-dom";
 interface OrderDetails {
-  id: number;
+  id: string;
   username: string;
   email: string;
   role: "Admin" | "Authorizer" | "Employee";
