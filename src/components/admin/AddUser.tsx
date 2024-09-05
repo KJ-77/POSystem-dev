@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
   Box,
   Button,
@@ -58,11 +58,7 @@ function MyModal() {
     }
   };
 
-  const handleRoleChange = (event: any, newRole: string) => {
-    if (newRole !== null) {
-      setRole(newRole);
-    }
-  };
+
 
   const handleSubmit = async () => {
     try {
@@ -149,10 +145,13 @@ function MyModal() {
             error={!!errors.email}
             helperText={errors.email}
           />
+
+
           <ToggleButtonGroup
             value={role}
             exclusive
-            onChange={handleRoleChange}
+            onChange={(e : any) => { setRole(e.target.value) }}
+
             fullWidth
             sx={{
               marginTop: 4,
