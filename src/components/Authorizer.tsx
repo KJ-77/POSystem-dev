@@ -7,7 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import axios from 'axios';
 import Loading from "./Loading";
-import { idToken } from "./signinform";
+//import { idToken } from "./signinform";
 
 interface Orders {
   ID: string;
@@ -105,7 +105,7 @@ export default function Authorizer() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders');
+        const response = await axios.get('http://localhost:3000/orders');
         const ordersWithId = response.data.map((orders: any, index: number) => ({
           ...orders,
           id: orders.ID || index.toString(), 
@@ -120,7 +120,7 @@ export default function Authorizer() {
     };
   
     fetchOrders();
-  }, []);
+  }, [open]);
 
 
   const handleRowClick = (params: GridRowParams) => {
@@ -206,7 +206,6 @@ export default function Authorizer() {
           analysis={selectedRow.analysis}
           score={selectedRow.score}
           isopen={open}
-          worker_id={selectedRow.worker_id}
           setisopen={setOpen}
         />
       )}
