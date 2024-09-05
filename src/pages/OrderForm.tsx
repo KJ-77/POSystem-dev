@@ -26,12 +26,13 @@ export default function FormPropsTextFields() {
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevent the default form submission behavior
-
+    const idToken = localStorage.getItem("idtoken");
     try {
       const response = await fetch('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/createorders/2488a4d8-d081-7092-4da6-521d83f22764', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
+          ...(idToken ? { Authorization: idToken } : {}),
         },
         body: JSON.stringify(formData)
       });

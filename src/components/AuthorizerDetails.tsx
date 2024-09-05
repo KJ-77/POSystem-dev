@@ -77,10 +77,18 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
     }
     try {
       setloading(true);
-      const response = await axios.put(`http://localhost:3000/orderId/${id}`, {
-        status: finalstate,
-        reason: reason,
-      });
+      const response = await axios.put(`http://localhost:3000/orderId/${id}`, 
+        {
+          status: finalstate,
+          reason: reason
+        }, 
+        {
+          headers: {
+            Authorization: localStorage.getItem('idtoken')
+          }
+        }
+      );
+      
       console.log("API response:", response.data);
       closehandler();
       setloading(false);

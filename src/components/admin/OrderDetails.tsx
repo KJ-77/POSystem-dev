@@ -26,7 +26,6 @@ interface OrderDetailsProps {
 
 
 const OrderDetails: React.FC<OrderDetailsProps> = ({
-
   name,
   orderby,
   unitprice,
@@ -114,7 +113,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
           </Typography>
            <Typography variant="body1"  sx={{ color: "#005858", fontSize: '1rem' }}>\
             <strong>
-            fewjefiowjoifwej qwindowind  qwondwqoin qwdojdwoinqwdj  qwd-ojwfj qwfjikqwf
+            {reason}
             </strong>
           </Typography>
             

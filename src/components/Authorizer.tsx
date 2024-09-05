@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRowParams, GridToolbar } from "@mui/x-data-grid";
 import AthorizerDetails from "./AuthorizerDetails";
 import theme from "../globalStyles";
@@ -105,7 +105,11 @@ export default function Authorizer() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/orders');
+        const response = await axios.get('http://localhost:3000/orders',{
+          headers: {
+            Authorization: localStorage.getItem('idtoken')
+          }
+        });
         const ordersWithId = response.data.map((orders: any, index: number) => ({
           ...orders,
           id: orders.ID || index.toString(), 

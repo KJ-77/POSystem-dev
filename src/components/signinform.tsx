@@ -99,7 +99,7 @@ async function handleSignIn(
   }
 }
 
-function checkSignIn(navigate: (path: string) => void){
+function  checkSignIn(navigate: (path: string) => void){
   if (!localStorage.getItem('role')){ 
     navigate("/");
     return;
@@ -111,20 +111,25 @@ function checkSignIn(navigate: (path: string) => void){
 
 export default function SignInSide() {
   const navigate = useNavigate();
-
+  const [loading, setloading] = React.useState(false);
   useEffect(() => {
     checkSignIn(navigate);
   }, []);
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setloading(true)
     const data = new FormData(event.currentTarget);
     const username = data.get("email") as string;
     const password = data.get("password") as string;
     try {
       await handleSignIn({ username, password }, navigate);
+
     } catch (error) {
       console.log("Error signing in", error);
+    }
+    finally{
+      setloading(false)
     }
     
   };
@@ -213,7 +218,7 @@ export default function SignInSide() {
                 sx={{ mt: 3, mb: 2 }}
                 color="primary"
               >
-                Sign In
+                {loading ? "Loading..." : "Sign In"}
               </Button>
             </Box>
           </Box>

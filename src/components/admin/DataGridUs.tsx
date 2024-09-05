@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   DataGrid,
   GridColDef,
@@ -9,9 +9,9 @@ import theme from "../../globalStyles";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import UserDetails from "./UserDetails";
-import axios from 'axios';
+import axios from "axios";
 import Loading from "../Loading";
-import AddUser from "./AddUser"
+import AddUser from "./AddUser";
 
 //"ID":2,"FULLNAME":"Jane Smith","":"jane.smith@example.com","position":"admin","status":"working"
 interface Users {
@@ -21,7 +21,6 @@ interface Users {
   position: string;
   status: string;
 }
-
 
 const columns: GridColDef[] = [
   {
@@ -82,32 +81,35 @@ export default function UsersDataGrid() {
   const [users, setUsers] = useState<Users[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   /*const [error, setError] = useState<string | null>(null);*/
-  
+
   useEffect(() => {
     const fetchUserss = async () => {
       try {
-        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/users", {   
-          method: 'GET',
-          headers: {
-            Authorization: localStorage.getItem('idtoken')
+        const response = await axios.get(
+          "https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/users",
+          {
+            method: "GET",
+            headers: {
+              Authorization: localStorage.getItem("idtoken"),
+            },
           }
-        });
-        
+        );
+
         const userssWithId = response.data.map((users: any, index: number) => ({
           ...users,
           id: users.ID || index.toString(), // Ensure each users has a unique id
         }));
         setUsers(userssWithId);
-      } catch (err ) {
-       // setError('Failed to fetch users');
-       console.log(err)
+      } catch (err) {
+        // setError('Failed to fetch users');
+        console.log(err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserss();
-  }, []);
+  }, [open]);
 
   const handleRowClick = (params: GridRowParams) => {
     setSelectedRow(params.row);
@@ -122,78 +124,79 @@ export default function UsersDataGrid() {
 
   return (
     <>
-   {loading ? (<Loading/>) : (
-    <div style={{ height: 400, width: "100%" }}>
-      <Box display="flex" alignItems="center" gap={2} mb={3}>
-        <SearchIcon style={{ color: theme.palette.primary.main }} />
-        <TextField
-          label="Search"
-          variant="outlined"
-          fullWidth
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ width: "25%" }}
-        />
-        <Box>
-          <InputLabel id="demo-simple-select-helper-label">Rule</InputLabel>
-          <Select
-            labelId="demo-simple-select-helper-label"
-            id="demo-simple-select-helper"
-            value={filtername}
-            onChange={(e) => {
-              if (e.target.value === "All") {
-                setFilter("");
-                setFiltername("All");
-              } else {
-                setFilter(e.target.value);
-                setFiltername(e.target.value);
-              }
+      {loading ? (
+        <Loading />
+      ) : (
+        <div style={{ height: 400, width: "100%" }}>
+          <Box display="flex" alignItems="center" gap={2} mb={3}>
+            <SearchIcon style={{ color: theme.palette.primary.main }} />
+            <TextField
+              label="Search"
+              variant="outlined"
+              fullWidth
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ width: "25%" }}
+            />
+            <Box>
+              <InputLabel id="demo-simple-select-helper-label">Rule</InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                value={filtername}
+                onChange={(e) => {
+                  if (e.target.value === "All") {
+                    setFilter("");
+                    setFiltername("All");
+                  } else {
+                    setFilter(e.target.value);
+                    setFiltername(e.target.value);
+                  }
+                }}
+                style={{ marginBottom: "20px" }}
+              >
+                <MenuItem value={"All"}>All</MenuItem>
+                <MenuItem value={"Admin"}>Admin</MenuItem>
+                <MenuItem value={"Authorizer"}>Authorizer</MenuItem>
+                <MenuItem value={"Employee"}>Employee</MenuItem>
+              </Select>
+            </Box>
+          </Box>
+          <DataGrid
+            rows={filteredRows}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5, 10, 20]}
+            disableSelectionOnClick
+            slots={{
+              toolbar: GridToolbar,
             }}
-            style={{ marginBottom: "20px" }}
-          >
-            <MenuItem value={"All"}>All</MenuItem>
-            <MenuItem value={"Admin"}>Admin</MenuItem>
-            <MenuItem value={"Authorizer"}>Authorizer</MenuItem>
-            <MenuItem value={"Employee"}>Employee</MenuItem>
-          </Select>
-        </Box>
-      </Box>
-      <DataGrid
-        rows={filteredRows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5, 10, 20]}
-        disableSelectionOnClick
-        slots={{
-          toolbar: GridToolbar,
-        }}
-        sx={{
-          color: theme.palette.telet.main,
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: "red",
-            color: "red",
-            fontWeight: "bold",
-          },
-          "& .MuiDataGrid-cell": {
-            color: "black",
-            textAlign: "center",
-          },
-        }}
-        onRowClick={handleRowClick}
-      />
-      {selectedRow && (
-        <UserDetails
-          id={selectedRow.id}
-          username={selectedRow.FULLNAME}
-          email={selectedRow.email}
-          role={selectedRow.position}
-          isopen={open}
-          setisopen={setOpen}
-        />
+            sx={{
+              color: theme.palette.telet.main,
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "red",
+                color: "red",
+                fontWeight: "bold",
+              },
+              "& .MuiDataGrid-cell": {
+                color: "black",
+                textAlign: "center",
+              },
+            }}
+            onRowClick={handleRowClick}
+          />
+          {selectedRow && (
+            <UserDetails
+              id={selectedRow.id}
+              username={selectedRow.FULLNAME}
+              email={selectedRow.email}
+              role={selectedRow.position}
+              isopen={open}
+              setisopen={setOpen}
+            />
+          )}
+          <AddUser />
+        </div>
       )}
-      <AddUser />
-    </div>
-    
-  )}
-  </>
+    </>
   );
 }

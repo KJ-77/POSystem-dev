@@ -28,6 +28,7 @@ function MyModal() {
   const [errorapi, seterrorapi] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [loading, setloading] = useState(false);
   const [role, setRole] = useState("Authorizer");
   const [errors, setErrors] = useState({
     username: "",
@@ -41,22 +42,26 @@ function MyModal() {
   };
 
   const handleUsernameChange = (event: any) => {
-    setUsername(event.target.value);
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      username: "",
-    }));
-  };
-
-  const handleEmailChange = (event: any) => {
-    setEmail(event.target.value);
-    if (!isValidEmail) {
+    const value = event.target.value;
+    setUsername(value);
+     if (value.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        email: "",
+        username: "",
       }));
-    }
-  };
+  } 
+}
+
+const handleEmailChange = (event: any) => {
+  const value = event.target.value;
+  setEmail(value);
+  if (isValidEmail(value)) {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      email: "",
+    }));
+  } 
+}
 
   const handleRoleChange = (event: any, newRole: string) => {
     if (newRole !== null) {
@@ -66,12 +71,27 @@ function MyModal() {
 
   const handleSubmit = async () => {
     try {
+      if (!username.trim()) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          username: "Username is required",
+        }));
+      }
+        if (!isValidEmail(email)) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            email: "Invalid email format",
+          }));}
+        if(username.trim() && isValidEmail(email)){
+      setloading(true);
+      const idToken = localStorage.getItem("idtoken");
       const response = await fetch(
         "https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/user",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            ...(idToken ? { Authorization: idToken } : {}),
           },
           body: JSON.stringify({
             FULLNAME: username,
@@ -82,11 +102,24 @@ function MyModal() {
       );
 
       if (!response.ok) {
-        seterrorapi(`HTTP error! Status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({ message: "Unknown error" }));
+        seterrorapi(errorData.message || "An error occurred while creating the user.");
+        return;
       }
-    } catch (err: any) {
-      seterrorapi(err.message);
+
+      // Success
+      handleClose();
+;
+      setUsername('');
+      setEmail('');
+      seterrorapi('')
     }
+  } catch (err: any) {
+    seterrorapi(err.message || "An unexpected error occurred.");
+  }
+  finally {
+    setloading(false);
+  }
   };
   return (
     <div>
@@ -183,15 +216,16 @@ function MyModal() {
             }}
             onClick={handleSubmit}
           >
-            ADD User
+           {loading ? "Loading..." : "ADD User"}
           </Button>
-        </Box>
-      </Modal>
-      {errorapi && (
-        <Box p={1} fontSize="6px" color="red">
-          error : {errorapi}
+          {errorapi && (
+        <Box p={1} fontSize="15px" color="red">
+           {errorapi}
         </Box>
       )}
+        </Box>
+      </Modal>
+      
     </div>
   );
 }
