@@ -23,6 +23,11 @@ export default function FormPropsTextFields() {
     });
   };
 
+  // Check if all fields are filled
+  const isFormValid = () => {
+    return Object.values(formData).every(value => value !== '');
+  };
+
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -128,6 +133,7 @@ export default function FormPropsTextFields() {
             type="submit"
             variant="contained"
             color="primary"
+            disabled={!isFormValid()} // Disable button if form is not valid
           >
             Submit
           </Button>
