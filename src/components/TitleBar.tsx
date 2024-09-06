@@ -15,17 +15,52 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import logo from '../assets/Logo.png';
-
+import {jwtDecode} from "jwt-decode";
 interface Props {
   window?: () => Window;
   role: 'Employee' | 'Authorizer' | 'Admin';
 }
+
+
+interface DecodedToken {
+  sub: string;
+  'cognito:groups': string[];
+  iss: string;
+  'cognito:username': string;
+  origin_jti: string;
+  aud: string;
+  event_id: string;
+  token_use: string;
+  auth_time: number;
+  name: string;
+  exp: number;
+  iat: number;
+  jti: string;
+  email: string;
+}
+
 
 const drawerWidth = 240;
 
 const TitleBar: React.FC<Props> = ({ window, role }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate(); 
+  const [decodedToken, setDecodedToken] = React.useState<DecodedToken | null>(null);
+  
+  const token: string | null = localStorage.getItem('idtoken');
+
+  React.useEffect(() => {
+    if (token) {
+      try {
+        const decoded: DecodedToken = jwtDecode<DecodedToken>(token);
+        setDecodedToken(decoded);
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
+    } else {
+      console.log("No token found");
+    }
+  }, [token]);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -127,9 +162,18 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
       )}
           </Box>
           
-          {/* here we will be passsing the name of the user with his role */}
-          Admin: Rasha barakat
-
+          {decodedToken && (
+           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 2 }}>
+           <Typography variant="body1" sx={{ fontSize: '1.2rem', marginRight: 3 }}>
+             {decodedToken.name}
+           </Typography>
+           <Typography variant="body1" sx={{ fontSize: '1rem' }}>
+             {decodedToken["cognito:groups"].join(', ')}
+           </Typography>
+         </Box>
+         
+          )}
+          
         </Toolbar>
       </AppBar>
       <nav>

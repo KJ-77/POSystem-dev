@@ -87,15 +87,15 @@ async function handleSignIn(
     localStorage.setItem('idtoken', (idToken as unknown as string));
     
     try {
-      await axios.get("http://localhost:3000/confirmUserId ", {   
-        method: 'PUT',
+      await axios.put("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/confirmUserId", {}, {
         headers: {
           Authorization: localStorage.getItem('idtoken') || ''
         }
-      })
-    } catch (err ) {
-      console.log(err)
+      });
+    } catch (err) {
+      console.log(err);
     }
+    
 
     if (role === "Admin" ) navigate("/admin");
     if (role === "Authorizer" ) navigate("/Authorizer");

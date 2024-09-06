@@ -23,6 +23,7 @@
     "aws-sdk": "^2.1687.0",
     "axios": "^1.7.7",
     "formik": "^2.4.6",
+    "jwt-decode": "^4.0.0",
     "micromatch": "^4.0.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@types/jwt-decode": "^2.2.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
