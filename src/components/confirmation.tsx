@@ -1,7 +1,7 @@
 import { useState, useEffect, FormEvent } from "react";
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
-import { confirmSignIn } from "@aws-amplify/auth";
-
+import { confirmSignIn,  } from "@aws-amplify/auth";
+import { useNavigate } from "react-router-dom";
 const handleNewPassword = async (newPassword: string): Promise<void> => {
   try {
     
@@ -19,11 +19,17 @@ const handleNewPassword = async (newPassword: string): Promise<void> => {
   }
 };
 
+function  navSignIn(navigate: (path: string) => void){
+    navigate("/");
+};
+
 const ConfirmationPage = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [passwordsMatch, setPasswordsMatch] = useState<boolean>(true);
+  const [isPasswordSet, setIsPasswordSet] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (confirmPassword) {
@@ -41,6 +47,7 @@ const ConfirmationPage = () => {
 
     try {
       await handleNewPassword(password);
+      setIsPasswordSet(true);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message || "Failed to set new password");
@@ -49,6 +56,12 @@ const ConfirmationPage = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (isPasswordSet) {
+      navSignIn(navigate); // Call navSignIn once the password is set
+    }
+  }, [isPasswordSet, navigate]);
 
   return (
     <Container maxWidth="sm">

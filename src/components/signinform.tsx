@@ -4,8 +4,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-//import FormControlLabel from "@mui/material/FormControlLabel";
-//import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -13,37 +11,35 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import signinImage from "../assets/signin.png";
 import lockIcon from "../assets/icons8-lock-64.png";
-import {signIn, signOut, type SignInInput, fetchAuthSession} from "@aws-amplify/auth";
-//import { Amplify, type ResourcesConfig } from 'aws-amplify';
-//import { defaultStorage } from 'aws-amplify/utils';
-//import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
+import {signIn, signOut, getCurrentUser, type SignInInput, fetchAuthSession} from "@aws-amplify/auth";
 import { useEffect } from 'react';
+import axios from 'axios';
 
-// async function currentAuthenticatedUser() {
-//   try {
-//     const user = await getCurrentUser();
+async function currentAuthenticatedUser() {
+  try {
+    const user = await getCurrentUser();
 
-//     const username = user.username;
-//     const userId = user.userId;
-//     const signInDetails = JSON.stringify(user.signInDetails, null, 2);
+    const username = user.username;
+    const userId = user.userId;
+    const signInDetails = JSON.stringify(user.signInDetails, null, 2);
 
-//     console.log(`The username: ${username}`);
-//     console.log(`The userId: ${userId}`);
-//     console.log(`The signInDetails: ${signInDetails}`);
-//   } catch (err) {
-//     console.error('Error getting the current authenticated user:', err);
-//   }
-// }
+    console.log(`The username: ${username}`);
+    console.log(`The userId: ${userId}`);
+    console.log(`The signInDetails: ${signInDetails}`);
+  } catch (err) {
+    console.error('Error getting the current authenticated user:', err);
+  }
+}
 
-// async function currentSession() {
-//   try {
-//     const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
-//     console.log("access token: "+ accessToken);
-//     console.log("idToken: "+ idToken);
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
+async function currentSession() {
+  try {
+    const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
+    console.log("access token:"+accessToken);
+    console.log("id token:"+idToken);
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 const defaultTheme = createTheme({
   palette: {
@@ -71,8 +67,8 @@ async function handleSignIn(
     const user = await signIn({ username, password });
     console.log("User signed in successfully:", user);
 
-    // currentAuthenticatedUser();
-    // currentSession();
+    currentAuthenticatedUser();
+    currentSession();
 
     if (
       user?.nextStep?.signInStep ===
@@ -81,6 +77,7 @@ async function handleSignIn(
       console.log("Navigating to confirmation page");
       navigate('/confirmation');
     }
+
     const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
     const idTokenPayload = idToken?.payload;
     //@ts-expect-error
@@ -89,6 +86,17 @@ async function handleSignIn(
     localStorage.setItem('role', role);
     localStorage.setItem('idtoken', (idToken as unknown as string));
     
+    try {
+      await axios.get("http://localhost:3000/confirmUserId ", {   
+        method: 'PUT',
+        headers: {
+          Authorization: localStorage.getItem('idtoken') || ''
+        }
+      })
+    } catch (err ) {
+      console.log(err)
+    }
+
     if (role === "Admin" ) navigate("/admin");
     if (role === "Authorizer" ) navigate("/Authorizer");
     if (role === "Employee" ) navigate("/EmployeeDashboard");
@@ -98,7 +106,7 @@ async function handleSignIn(
   }
 }
 
-function  checkSignIn(navigate: (path: string) => void){
+function checkSignIn(navigate: (path: string) => void){
   if (!localStorage.getItem('role')){ 
     navigate("/");
     return;
