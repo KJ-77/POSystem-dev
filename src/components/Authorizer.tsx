@@ -105,7 +105,7 @@ export default function Authorizer() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/orders',{
+        const response = await axios.get('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders',{
           headers: {
             Authorization: localStorage.getItem('idtoken')
           }

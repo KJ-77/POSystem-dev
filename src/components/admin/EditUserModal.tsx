@@ -30,7 +30,7 @@ export default function SignUp({id} :any) {
     const fullName = `${first} ${last}`;
     
     try {
-      const response = await fetch(`https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/user/${id}`, {
+      const response = await fetch(`https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/updateuserId/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

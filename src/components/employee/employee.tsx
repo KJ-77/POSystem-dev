@@ -76,7 +76,7 @@ export default function OrdersDataGrid() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orders/1", {
+        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/ordersbyworker", {
           method: 'GET',
           headers: {
             Authorization: localStorage.getItem('idtoken')

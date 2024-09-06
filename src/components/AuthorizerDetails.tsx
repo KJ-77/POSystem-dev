@@ -77,7 +77,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
     }
     try {
       setloading(true);
-      const response = await axios.put(`http://localhost:3000/orderId/${id}`, 
+      const response = await axios.put(`https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orderId/${id}`, 
         {
           status: finalstate,
           reason: reason

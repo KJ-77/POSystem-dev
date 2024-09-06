@@ -4,8 +4,8 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+//import FormControlLabel from "@mui/material/FormControlLabel";
+//import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -13,10 +13,10 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import signinImage from "../assets/signin.png";
 import lockIcon from "../assets/icons8-lock-64.png";
-import {signIn, signOut, type SignInInput, getCurrentUser, fetchAuthSession} from "@aws-amplify/auth";
-import { Amplify, type ResourcesConfig } from 'aws-amplify';
-import { defaultStorage } from 'aws-amplify/utils';
-import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
+import {signIn, signOut, type SignInInput, fetchAuthSession} from "@aws-amplify/auth";
+//import { Amplify, type ResourcesConfig } from 'aws-amplify';
+//import { defaultStorage } from 'aws-amplify/utils';
+//import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { useEffect } from 'react';
 
 // async function currentAuthenticatedUser() {
@@ -83,7 +83,7 @@ async function handleSignIn(
     }
     const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
     const idTokenPayload = idToken?.payload;
-    //@ts-ignore
+    //@ts-expect-error
     const role = idTokenPayload["cognito:groups"][0];
     localStorage.setItem('access', 'true');
     localStorage.setItem('role', role);
