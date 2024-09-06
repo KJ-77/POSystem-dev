@@ -63,9 +63,6 @@ const handleEmailChange = (event: any) => {
     }));
   } 
 }
-
-
-
   const handleSubmit = async () => {
     try {
       if (!username.trim()) {
