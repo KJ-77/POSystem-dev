@@ -21,7 +21,6 @@ interface Props {
   role: 'Employee' | 'Authorizer' | 'Admin';
 }
 
-
 interface DecodedToken {
   sub: string;
   'cognito:groups': string[];
@@ -38,10 +37,7 @@ interface DecodedToken {
   jti: string;
   email: string;
 }
-
-
 const drawerWidth = 240;
-
 const TitleBar: React.FC<Props> = ({ window, role }) => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate(); 
@@ -145,7 +141,7 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
           <Button
             key={item.name}
             sx={{ color: '#fff', mx: 1 }}
-            onClick={item.onclick} // Call the onClick handler for Logout
+            onClick={item.onclick} 
           >
             {item.name}
           </Button>
@@ -154,26 +150,23 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
             key={item.name}
             sx={{ color: '#fff', mx: 1 }}
             component={Link}
-            to={item.path} // Ensure to add the 'to' property for navigation
+            to={item.path} 
           >
             {item.name}
           </Button>
         )
       )}
           </Box>
-          
-          {decodedToken && (
-           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 2 }}>
-           <Typography variant="body1" sx={{ fontSize: '1.2rem', marginRight: 3 }}>
-             {decodedToken.name}
-           </Typography>
-           <Typography variant="body1" sx={{ fontSize: '1rem' }}>
-             {decodedToken["cognito:groups"].join(', ')}
-           </Typography>
-         </Box>
-         
+  {decodedToken && (
+    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 2 }}>
+      <Typography variant="body1" sx={{ fontSize: '1rem', marginRight: 1 }}>
+        {decodedToken["cognito:groups"].join(', ')}:
+      </Typography>
+      <Typography variant="body1" sx={{ fontSize: '1.2rem' }}>
+        {decodedToken.name}
+      </Typography>
+    </Box>
           )}
-          
         </Toolbar>
       </AppBar>
       <nav>
