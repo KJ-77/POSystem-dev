@@ -44,7 +44,9 @@ const UserDetails: React.FC<OrderDetails> = ({
       try {
         const response = await fetch(`https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/user/${id}`, {
           method: 'DELETE',
-
+          headers: {
+            Authorization: localStorage.getItem('idtoken') || ''
+          }
         });
     
         if (response.ok) {
