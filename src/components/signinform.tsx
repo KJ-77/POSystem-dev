@@ -28,7 +28,7 @@ async function currentAuthenticatedUser() {
     console.log(`The signInDetails: ${signInDetails}`);
   } catch (err) {
     console.error('Error getting the current authenticated user:', err);
-  }
+  } 
 }
 
 async function currentSession() {

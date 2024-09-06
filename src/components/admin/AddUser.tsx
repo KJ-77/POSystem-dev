@@ -1,4 +1,5 @@
 import  { useState } from "react";
+import { toast } from 'react-toastify';
 import {
   Box,
   Button,
@@ -102,7 +103,7 @@ const handleEmailChange = (event: any) => {
         seterrorapi(errorData.message || "An error occurred while creating the user.");
         return;
       }
-
+      toast.success("user add successfully");
       // Success
       handleClose();
 ;
