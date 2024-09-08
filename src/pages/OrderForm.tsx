@@ -3,8 +3,13 @@ import TextField from '@mui/material/TextField';
 import TitleBar from '../components/TitleBar';
 import { Button, Typography } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function FormPropsTextFields() {
+  const navigate = useNavigate();
+  const[errorapi,seterrorapi] = useState('')
+  const [loading, setloading] = useState(false);
   const [formData, setFormData] = useState({
     order_name: '',
     unit_price: '',
@@ -15,6 +20,7 @@ export default function FormPropsTextFields() {
   const [submitted, setSubmitted] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    seterrorapi('')
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -28,20 +34,27 @@ export default function FormPropsTextFields() {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent the default form submission behavior
-    const idToken = localStorage.getItem("idtoken");
+    event.preventDefault();
+    
+    // Prevent the default form submission behavior
+   const idToken = localStorage.getItem("idtoken");
     try {
-      const response = await fetch('https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/createorders', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-          ...(idToken ? { Authorization: idToken } : {}),
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (response.ok) {
+      setloading(true)
+      const response = await axios.post(
+        'https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/createorders',
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            ...(idToken ? { Authorization: idToken } : {}),
+          },
+        }
+      );
+      console.log(response)
+      if (response.status === 200 || response.status === 201) {
         setSubmitted(true);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        navigate('/EmployeeDashboard');
         setFormData({
           order_name: '',
           unit_price: '',
@@ -52,8 +65,22 @@ export default function FormPropsTextFields() {
       } else {
         console.error('Failed to submit the form');
       }
-    } catch (error) {
-      console.error('Error submitting the form:', error);
+    } catch (error :any) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          seterrorapi('Unauthorized: Please log in again.');
+        } else {
+          const errorMessage = error.response.data.error || 'An error occurred while creating the order.';
+          seterrorapi(errorMessage);
+        }
+      } else if (error.request) {
+        seterrorapi('No response received from the server. Please try again.');
+      } else {
+        seterrorapi(error.message || 'An unexpected error occurred.');
+      }
+    }
+    finally {
+      setloading(false);
     }
   };
 
@@ -133,13 +160,17 @@ export default function FormPropsTextFields() {
             color="primary"
             disabled={!isFormValid()} 
           >
-            Submit
+            {loading ? "Loading..." : "Submit"}
           </Button>
           {submitted && (
             <Typography variant="body1" color="primary">
               Form submitted successfully!
             </Typography>
           )}
+          {errorapi && (
+            <Typography variant="body1" color="red">
+              {errorapi}
+            </Typography>)}
         </div>
       </Box>
     </>

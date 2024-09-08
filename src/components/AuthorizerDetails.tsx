@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast ,ToastContainer} from 'react-toastify';
 import {
   Box,
   Button,
@@ -54,23 +55,40 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
   const [reason, setReason] = useState("");
   const [loading, setloading] = useState(false);
   const [error, setError] = useState(false);
-
+  const [errorB, setErrorB] = useState(false);
+  const [errorapi, seterrorapi] = useState("");
   const closehandler = () => {
     setSelectedButton(null);
     setfinalstate("");
     setisopen(false);
   };
   const handleSuccessClick = () => {
+    setErrorB(false)
     setSelectedButton("success");
     setfinalstate("Accepted");
   };
-
+  const handleUpdateOrder = (finalstate: string) => {
+    toast.success(`Order ${finalstate} successfully`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      draggable: true,
+      pauseOnHover: true,
+    });
+  };
   const handleErrorClick = () => {
+    setErrorB(false)
     setSelectedButton("error");
     setfinalstate("Rejected");
   };
 
   const handleButtonClick = async () => {
+    if (!finalstate){
+      setErrorB(true)
+      return
+    }
     if (!reason) {
       setError(true);  // Show an error if the reason field is empty
       return;
@@ -90,11 +108,31 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
       );
       
       console.log("API response:", response.data);
+      handleUpdateOrder(finalstate);
       closehandler();
       setloading(false);
-    } catch (error) {
-      console.error("Error making API request:", error);
-    }
+     } catch (error : any) {
+        if (error.response) {
+          if (error.response.status === 401) {
+            seterrorapi('Unauthorized: Please log in again.');
+          }else{
+          const errorMessage = error.response.data.error || 'An error occurred while creating the user.';
+          seterrorapi(errorMessage);
+            }
+        } else if (error.request) {
+          
+          seterrorapi('No response received from the server. Please try again.');
+          console.error('No response received:', error.request);
+        } else {
+          
+          seterrorapi(error.message || 'An unexpected error occurred.');
+          console.error('Error setting up the request:', error.message);
+        }
+      }
+      
+      finally {
+        setloading(false);
+      }
   };
 
   return (
@@ -106,6 +144,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
     >
       <DialogTitle>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <ToastContainer />
           <Typography
             variant="h4"
             fontWeight="bold"
@@ -327,6 +366,16 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
             </CustomButton>
           )}
         </Box>
+        {errorB && (
+        <Box p={1} fontSize="15px" color="red">
+           take the decision please
+        </Box>
+      )}
+        {errorapi && (
+        <Box p={1} fontSize="15px" color="red">
+           {errorapi}
+        </Box>
+      )}
       </DialogContent>
     </Dialog>
   );

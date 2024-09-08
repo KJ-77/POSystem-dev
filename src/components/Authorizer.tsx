@@ -116,7 +116,6 @@ export default function Authorizer() {
         }));
          setOrders(ordersWithId);
       } catch (err ) {
-       // setError('Failed to fetch users');
        console.log(err)
       } finally {
         setLoading(false);

@@ -11,9 +11,15 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import signinImage from "../assets/signin.png";
 import lockIcon from "../assets/icons8-lock-64.png";
-import {signIn, signOut, getCurrentUser, type SignInInput, fetchAuthSession} from "@aws-amplify/auth";
-import { useEffect } from 'react';
-import axios from 'axios';
+import {
+  signIn,
+  signOut,
+  getCurrentUser,
+  type SignInInput,
+  fetchAuthSession,
+} from "@aws-amplify/auth";
+import { useEffect } from "react";
+import axios from "axios";
 
 async function currentAuthenticatedUser() {
   try {
@@ -27,15 +33,15 @@ async function currentAuthenticatedUser() {
     console.log(`The userId: ${userId}`);
     console.log(`The signInDetails: ${signInDetails}`);
   } catch (err) {
-    console.error('Error getting the current authenticated user:', err);
-  } 
+    console.error("Error getting the current authenticated user:", err);
+  }
 }
 
 async function currentSession() {
   try {
     const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
-    console.log("access token:"+accessToken);
-    console.log("id token:"+idToken);
+    console.log("access token:" + accessToken);
+    console.log("id token:" + idToken);
   } catch (err) {
     console.log(err);
   }
@@ -56,13 +62,13 @@ async function handleSignIn(
   navigate: (path: string) => void
 ) {
   try {
-      try {
-        localStorage.clear();
-        await signOut();
-        console.log("User signed out");
-      } catch (err) {
-        console.log("Error signing out user", err);
-      }
+    try {
+      localStorage.clear();
+      await signOut();
+      console.log("User signed out");
+    } catch (err) {
+      console.log("Error signing out user", err);
+    }
 
     const user = await signIn({ username, password });
     console.log("User signed in successfully:", user);
@@ -75,70 +81,75 @@ async function handleSignIn(
       "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED"
     ) {
       console.log("Navigating to confirmation page");
-      navigate('/confirmation');
+      navigate("/confirmation");
     }
 
     const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
     const idTokenPayload = idToken?.payload;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-expect-error
     const role = idTokenPayload["cognito:groups"][0];
-    localStorage.setItem('access', 'true');
-    localStorage.setItem('role', role);
-    localStorage.setItem('idtoken', (idToken as unknown as string));
-    
+    localStorage.setItem("access", "true");
+    localStorage.setItem("role", role);
+    localStorage.setItem("idtoken", idToken as unknown as string);
+
     try {
-      await axios.put("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/confirmUserId", {}, {
-        headers: {
-          Authorization: localStorage.getItem('idtoken') || ''
+      await axios.put(
+        "https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/confirmUserId",
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem("idtoken") || "",
+          },
         }
-      });
+      );
     } catch (err) {
       console.log(err);
     }
-    
 
-    if (role === "Admin" ) navigate("/admin");
-    if (role === "Authorizer" ) navigate("/Authorizer");
-    if (role === "Employee" ) navigate("/EmployeeDashboard");
- 
+    if (role === "Admin") navigate("/admin");
+    if (role === "Authorizer") navigate("/Authorizer");
+    if (role === "Employee") navigate("/EmployeeDashboard");
   } catch (error) {
     console.log("Error signing in:", error);
   }
 }
 
-function checkSignIn(navigate: (path: string) => void){
-  if (!localStorage.getItem('role')){ 
+function checkSignIn(navigate: (path: string) => void) {
+  if (!localStorage.getItem("role")) {
     navigate("/");
     return;
   }
-  if (localStorage.getItem('role') === "Admin" ) navigate("/admin");
-  if (localStorage.getItem('role') === "Authorizer" ) navigate("/Authorizer");
-  if (localStorage.getItem('role') === "Employee" ) navigate("/EmployeeDashboard");
+  if (localStorage.getItem("role") === "Admin") navigate("/admin");
+  if (localStorage.getItem("role") === "Authorizer") navigate("/Authorizer");
+  if (localStorage.getItem("role") === "Employee")
+    navigate("/EmployeeDashboard");
 }
 
 export default function SignInSide() {
+  const [error, seterror] = React.useState("");
   const navigate = useNavigate();
   const [loading, setloading] = React.useState(false);
   useEffect(() => {
     checkSignIn(navigate);
   }, []);
-  
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setloading(true)
+    setloading(true);
     const data = new FormData(event.currentTarget);
     const username = data.get("email") as string;
     const password = data.get("password") as string;
+
     try {
       await handleSignIn({ username, password }, navigate);
 
-    } catch (error) {
-      console.log("Error signing in", error);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: any) {
+      seterror("Error signing in");
+    } finally {
+      setloading(false);
     }
-    finally{
-      setloading(false)
-    }
-    
   };
 
   return (
@@ -214,7 +225,7 @@ export default function SignInSide() {
                 id="password"
                 autoComplete="current-password"
               />
-             
+
               <Button
                 type="submit"
                 fullWidth
@@ -225,6 +236,11 @@ export default function SignInSide() {
                 {loading ? "Loading..." : "Sign In"}
               </Button>
             </Box>
+            {error && (
+              <Typography variant="body1" color="red">
+                {error}
+              </Typography>
+            )}
           </Box>
         </Grid>
       </Grid>

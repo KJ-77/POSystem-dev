@@ -12,12 +12,14 @@ interface ConfirmationDialogProps {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  loading:boolean
 }
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   open,
   onClose,
   onConfirm,
+  loading
 }) => {
   return (
     <Dialog open={open} onClose={onClose}>
@@ -47,7 +49,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
             onClose();
           }}
         >
-          Delete
+          {loading ? "Loading..." : "Delete"}
         </Button>
       </DialogActions>
     </Dialog>

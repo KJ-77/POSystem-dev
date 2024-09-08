@@ -1,4 +1,3 @@
-
 import {
   Box,
   Button,
@@ -11,8 +10,9 @@ import {
 } from "@mui/material";
 import CustomButton from "../../CustomStyle/CustomButton";
 import theme from "../../globalStyles";
-import ConfirmationDelete from "./ConfirmationDelete"
-import React,{ useState } from "react";
+import ConfirmationDelete from "./ConfirmationDelete";
+import { toast, ToastContainer } from "react-toastify";
+import React, { useState } from "react";
 import TransitionsModal from "./EditUser";
 import { useNavigate } from "react-router-dom";
 interface OrderDetails {
@@ -32,38 +32,66 @@ const UserDetails: React.FC<OrderDetails> = ({
   isopen,
   setisopen,
 }) => {
-  
-    const navigate = useNavigate();
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const navigate = useNavigate();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [loading, setloading] = useState(false);
 
-    const handleDialogClose = () => {
-        setIsDialogOpen(false);
-      };
-    const handleConfirmDelete = async() => {
-        
-      try {
-        const response = await fetch(`https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/user/${id}`, {
-          method: 'DELETE',
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
+  const handleConfirmDelete = async () => {
+    setloading(false);
+    try {
+      const response = await fetch(
+        `https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/user/${id}`,
+        {
+          method: "DELETE",
           headers: {
-            Authorization: localStorage.getItem('idtoken') || ''
-          }
-        });
-    
-        if (response.ok) {
-          console.log('User deleted successfully:');
-          navigate(0);
-          
-        } else {
-          console.error('Failed to delete user:', response.statusText);
-         
+            Authorization: localStorage.getItem("idtoken") || "",
+          },
         }
-      } catch (error) {
-        console.error('Error deleting user:', error);
-        // Handle the network error, show a message to the user, etc.
+      );
+
+      if (response.ok) {
+        toast.success("User deleted successfully", {
+          position: "top-right",
+          autoClose: 500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          draggable: true,
+          pauseOnHover: true,
+        });
+        setTimeout(() => {
+          navigate(0);
+        }, 300);
+      } else {
+        toast.error("Error deleting user", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          draggable: true,
+          pauseOnHover: true,
+        });
       }
-      };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: any) {
+      toast.error("Error deleting user", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        pauseOnHover: true,
+      });
+    }
+  };
   return (
     <>
+      <ToastContainer />
       {isopen ? (
         <Dialog open={isopen} onClose={() => {}} maxWidth="sm" fullWidth>
           <DialogTitle>
@@ -111,25 +139,25 @@ const UserDetails: React.FC<OrderDetails> = ({
                 width: "100%",
               }}
             >
-              
               <Button
-        sx={{
-          backgroundColor: 'rgb(200,0,0)',
-          color: 'white',
-          '&:hover': {
-            backgroundColor: '#b71c1c',
-          },
-        }}
-        onClick={()=>setIsDialogOpen(true)}
-      >
-        Delete User
-      </Button>
-      <ConfirmationDelete
-        open={isDialogOpen}
-       onClose={handleDialogClose}
-        onConfirm={handleConfirmDelete}
-      />
-      <TransitionsModal id={id} />
+                sx={{
+                  backgroundColor: "rgb(200,0,0)",
+                  color: "white",
+                  "&:hover": {
+                    backgroundColor: "#b71c1c",
+                  },
+                }}
+                onClick={() => setIsDialogOpen(true)}
+              >
+                Delete User
+              </Button>
+              <ConfirmationDelete
+                loading={loading}
+                open={isDialogOpen}
+                onClose={handleDialogClose}
+                onConfirm={handleConfirmDelete}
+              />
+              <TransitionsModal id={id} />
               <CustomButton onClick={() => setisopen(false)}>
                 Close
               </CustomButton>
