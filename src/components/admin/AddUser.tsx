@@ -1,5 +1,5 @@
 import  { useState } from "react";
-import { toast } from 'react-toastify';
+import { toast ,ToastContainer} from 'react-toastify';
 import {
   Box,
   Button,
@@ -12,6 +12,7 @@ import {
 import theme from "../../globalStyles";
 import { styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
+import axios from "axios";
 //import {signUp } from "@aws-amplify/auth";
 //import  Auth  from 'aws-amplify/auth';
 const CustomToggleButton = styled(ToggleButton)(({ theme, selected }) => ({
@@ -37,12 +38,27 @@ function MyModal() {
     password: "",
   });
 
+
+  const handleAddingUser = () => {
+    toast.success('User added successfully & we send invitation email!', {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnFocusLoss: true,
+      draggable: true,
+      pauseOnHover: true,
+    });
+  };
+
+
   const isValidEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
   };
 
   const handleUsernameChange = (event: any) => {
+    seterrorapi('')
     const value = event.target.value;
     setUsername(value);
      if (value.trim()) {
@@ -54,6 +70,7 @@ function MyModal() {
 }
 
 const handleEmailChange = (event: any) => {
+  seterrorapi('')
   const value = event.target.value;
   setEmail(value);
   if (isValidEmail(value)) {
@@ -81,45 +98,52 @@ const handleEmailChange = (event: any) => {
           }));}
         if(username.trim() && isValidEmail(email)){
       setloading(true);
-      const idToken = localStorage.getItem("idtoken");
-      const response = await fetch(
+        await axios.post(
         "https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/user",
         {
-          method: "POST",
+          FULLNAME: username,
+          email: email,
+          position: role,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
-            ...(idToken ? { Authorization: idToken } : {}),
+            Authorization: localStorage.getItem('idtoken') || ''
           },
-          body: JSON.stringify({
-            FULLNAME: username,
-            email: email,
-            position: role,
-          }),
         }
       );
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: "Unknown error" }));
-        seterrorapi(errorData.message || "An error occurred while creating the user.");
-        return;
-      }
-      toast.success("user add successfully");
-      // Success
+      handleAddingUser()
       handleClose();
-;
       setUsername('');
       setEmail('');
       seterrorapi('')
     }
-  } catch (err: any) {
-    seterrorapi(err.message || "An unexpected error occurred.");
+  } catch (error : any) {
+    if (error.response) {
+      if (error.response.status === 401) {
+        seterrorapi('Unauthorized: Please log in again.');
+      }else{
+      const errorMessage = error.response.data.error || 'An error occurred while creating the user.';
+      seterrorapi(errorMessage);
+        }
+    } else if (error.request) {
+      
+      seterrorapi('No response received from the server. Please try again.');
+      console.error('No response received:', error.request);
+    } else {
+      
+      seterrorapi(error.message || 'An unexpected error occurred.');
+      console.error('Error setting up the request:', error.message);
+    }
   }
+  
   finally {
     setloading(false);
   }
   };
   return (
     <div>
+<ToastContainer />
       <Button
         variant="contained"
         sx={{
@@ -185,7 +209,6 @@ const handleEmailChange = (event: any) => {
             value={role}
             exclusive
             onChange={(e : any) => { setRole(e.target.value) }}
-
             fullWidth
             sx={{
               marginTop: 4,

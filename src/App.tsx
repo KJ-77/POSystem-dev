@@ -15,6 +15,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedAdmin from "./ProtectedRoutes/ProtectedAdmin";
 import ProtectedEmployee from "./ProtectedRoutes/ProtectedEmployee";
 import ProtectedAuthorizer from "./ProtectedRoutes/ProtectedAuthorizer"
+import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   Amplify.configure(amplifyConfig);
   return (
