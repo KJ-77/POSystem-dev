@@ -66,7 +66,7 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
     const handleLogout = () => {
       console.log("HandleLogout");
       localStorage.clear();
-      navigate('/'); 
+      navigate('/');
     };
     switch (role) {
       case 'Employee':
@@ -93,7 +93,7 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        ProOrder
+        ProOrderd
       </Typography>
       <Divider />
       <List>
@@ -159,12 +159,16 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
           </Box>
   {decodedToken && (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 2 }}>
-      <Typography variant="body1" sx={{ fontSize: '1rem', marginRight: 1 }}>
+      <Typography variant="body1" sx={{ fontSize: { xs: '1rem',sm: '1.2rem',}, marginRight: 1 }}>
         {decodedToken["cognito:groups"].join(', ')}:
       </Typography>
-      <Typography variant="body1" sx={{ fontSize: '1.2rem' }}>
+      <Typography variant="body1" sx={{ fontSize: {
+      xs: '1rem',
+      sm: '1.2rem',
+    }, }}>
         {decodedToken.name}
       </Typography>
+      
     </Box>
           )}
         </Toolbar>

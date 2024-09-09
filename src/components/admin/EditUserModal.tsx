@@ -11,56 +11,62 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const defaultTheme = createTheme();
 
 export default function SignUp({ id }: any) {
-  const [first, setfirst] = React.useState("");
   const [loading, setloading] = React.useState(false);
-  const [last, setlast] = React.useState("");
+  const [name, setname] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [error, seterror] = React.useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const fullName = `${first} ${last}`;
     const bodyData: any = {};
 
     // Add only if `fullName` is provided
-    if (first || last) {
-      bodyData.FULLNAME = fullName;
+    if (name) {
+      bodyData.FULLNAME = name;
     }
 
     // Add only if `email` is provided
     if (email) {
       bodyData.email = email;
     }
-    setloading(true);
     if (Object.keys(bodyData).length > 0) {
       try {
-        const response = await fetch(
+        setloading(true);
+        const response = await axios.put(
           `https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/updateuserId/${id}`,
+          bodyData,
           {
-            method: "PUT",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(bodyData),
           }
         );
 
-        if (response.ok) {
+        if (response.status === 200) {
           navigate(0);
         } else {
-          seterror("somthing wrong!!!!");
+          seterror("Something went wrong!");
         }
       } catch (error: any) {
-        seterror(error);
+        if (error.response) {
+          seterror(
+            error.response.data.error || "An unexpected error occurred."
+          );
+        } else if (error.request) {
+          seterror("No response received from server.");
+        } else {
+          seterror("Error setting up request: " + error.message);
+        }
       } finally {
         setloading(false);
       }
-    }
+    } else seterror("update name or email!!!");
   };
 
   return (
@@ -100,26 +106,14 @@ export default function SignUp({ id }: any) {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  value={first}
-                  onChange={(e) => setfirst(e.target.value)}
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  value={last}
-                  onChange={(e) => setlast(e.target.value)}
+                  value={name}
+                  onChange={(e) => setname(e.target.value)}
                   fullWidth
                   id="lastName"
-                  label="Last Name"
-                  name="lastName"
+                  label="Full Name"
+                  name="full name"
                   autoComplete="family-name"
                 />
               </Grid>

@@ -40,7 +40,7 @@ const UserDetails: React.FC<OrderDetails> = ({
     setIsDialogOpen(false);
   };
   const handleConfirmDelete = async () => {
-    setloading(false);
+    setloading(true);
     try {
       const response = await fetch(
         `https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/user/${id}`,
@@ -87,6 +87,9 @@ const UserDetails: React.FC<OrderDetails> = ({
         draggable: true,
         pauseOnHover: true,
       });
+    }
+    finally{
+      setloading(false);
     }
   };
   return (
