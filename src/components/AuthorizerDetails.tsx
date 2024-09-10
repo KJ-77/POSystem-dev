@@ -89,7 +89,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
       setErrorB(true)
       return
     }
-    if (!reason) {
+    if (!reason && finalstate === 'Rejected') {
       setError(true);  // Show an error if the reason field is empty
       return;
     }
