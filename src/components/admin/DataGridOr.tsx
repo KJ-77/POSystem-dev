@@ -116,7 +116,8 @@ export default function OrdersDataGrid() {
         const ordersWithId = response.data.map((orders: any, index: number) => ({
           ...orders,
           id: orders.ID || index.toString(), 
-          total_price: `${orders.total_price}$`
+          total_price: `${orders.total_price}$`,
+          date: new Date(orders.order_date).toLocaleDateString()
         }));
          setOrders(ordersWithId);
       } catch (err ) {
@@ -207,7 +208,7 @@ export default function OrdersDataGrid() {
           quantity={selectedRow.quantity}
           description={selectedRow.order_desc}
           status={selectedRow.order_status}
-          date={selectedRow.order_date}
+          date={selectedRow.date}
           link={selectedRow.link}
           reason={selectedRow.reason}
           isopen={open}

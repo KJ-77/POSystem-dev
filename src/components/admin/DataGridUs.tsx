@@ -99,7 +99,7 @@ const columns: GridColDef[] = [
 ];
 
 export default function UsersDataGrid() {
-  const [selectedRow, setSelectedRow] = useState<Users | null>(null);  // Explicit typing here
+  const [selectedRow, setSelectedRow] = useState<Users | null>(null); // Explicit typing here
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("");
   const [filtername, setFiltername] = useState("All");
@@ -111,14 +111,17 @@ export default function UsersDataGrid() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/users", {   
-          method: 'GET',
-          headers: {
-            Authorization: localStorage.getItem('idtoken') || ''
+        const response = await axios.get(
+          "https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/users",
+          {
+            method: "GET",
+            headers: {
+              Authorization: localStorage.getItem("idtoken") || "",
+            },
           }
-        });
-        console.log(response.data)
-        console.log("opsjconcdjncd")
+        );
+        console.log(response.data);
+        console.log("opsjconcdjncd");
         const usersWithId = response.data.map((user: any, index: number) => ({
           ...user,
           id: user.ID || index.toString(),
@@ -135,7 +138,7 @@ export default function UsersDataGrid() {
   }, [open]);
 
   const handleRowClick = (params: GridRowParams) => {
-    setSelectedRow(params.row as Users);  // Explicit type assertion here
+    setSelectedRow(params.row as Users); // Explicit type assertion here
     setOpen(true);
   };
 
@@ -151,39 +154,59 @@ export default function UsersDataGrid() {
         <Loading />
       ) : (
         <div style={{ height: 400, width: "100%" }}>
-          <Box display="flex" alignItems="center" gap={2} mb={3}>
-            <SearchIcon style={{ color: theme.palette.primary.main }} />
-            <TextField
-              label="Search"
-              variant="outlined"
-              fullWidth
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ width: "25%" }}
-            />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <Box
+              sx={{ display: "flex", alignItems: "center", width: "60%" }}
+              gap={2}
+              mb={3}
+            >
+              <SearchIcon style={{ color: theme.palette.primary.main }} />
+              <TextField
+                label="Search"
+                variant="outlined"
+                fullWidth
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{ width: "25%" }}
+              />
+              <Box>
+                <InputLabel id="demo-simple-select-helper-label">
+                  Role
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={filtername}
+                  onChange={(e) => {
+                    if (e.target.value === "All") {
+                      setFilter("");
+                      setFiltername("All");
+                    } else {
+                      setFilter(e.target.value);
+                      setFiltername(e.target.value);
+                    }
+                  }}
+                  style={{ marginBottom: "20px" }}
+                >
+                  <MenuItem value={"All"}>All</MenuItem>
+                  <MenuItem value={"Admin"}>Admin</MenuItem>
+                  <MenuItem value={"Authorizer"}>Authorizer</MenuItem>
+                  <MenuItem value={"Employee"}>Employee</MenuItem>
+                </Select>
+              </Box>
+            </Box>
+
             <Box>
-              <InputLabel id="demo-simple-select-helper-label">Role</InputLabel>
-              <Select
-                labelId="demo-simple-select-helper-label"
-                id="demo-simple-select-helper"
-                value={filtername}
-                onChange={(e) => {
-                  if (e.target.value === "All") {
-                    setFilter("");
-                    setFiltername("All");
-                  } else {
-                    setFilter(e.target.value);
-                    setFiltername(e.target.value);
-                  }
-                }}
-                style={{ marginBottom: "20px" }}
-              >
-                <MenuItem value={"All"}>All</MenuItem>
-                <MenuItem value={"Admin"}>Admin</MenuItem>
-                <MenuItem value={"Authorizer"}>Authorizer</MenuItem>
-                <MenuItem value={"Employee"}>Employee</MenuItem>
-              </Select>
+              <AddUser />
             </Box>
           </Box>
+
           <DataGrid
             rows={filteredRows}
             columns={columns}
@@ -216,7 +239,6 @@ export default function UsersDataGrid() {
               setisopen={setOpen}
             />
           )}
-          <AddUser />
         </div>
       )}
     </>

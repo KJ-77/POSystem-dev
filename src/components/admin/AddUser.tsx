@@ -6,26 +6,27 @@ import {
   Modal,
   TextField,
   Typography,
-  ToggleButtonGroup,
-  ToggleButton,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
 } from "@mui/material";
 import theme from "../../globalStyles";
-import { styled } from "@mui/material/styles";
+//import { styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 //import {signUp } from "@aws-amplify/auth";
 //import  Auth  from 'aws-amplify/auth';
+
+
+/*
 const CustomToggleButton = styled(ToggleButton)(({ theme, selected }) => ({
   backgroundColor: selected ? "white" : theme.palette.telet.main,
   color: "white",
   "&:hover": {
     backgroundColor: theme.palette.rabe3.main,
   },
-}));
+}));*/
 
 function MyModal() {
   const [open, setOpen] = useState(false);

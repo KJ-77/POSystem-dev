@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export default function FormPropsTextFields() {
   const navigate = useNavigate();
-  const[errorapi,seterrorapi] = useState('')
+  const [errorapi, seterrorapi] = useState('');
   const [loading, setloading] = useState(false);
   const [formData, setFormData] = useState({
     order_name: '',
@@ -20,7 +20,7 @@ export default function FormPropsTextFields() {
   const [submitted, setSubmitted] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    seterrorapi('')
+    seterrorapi('');
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -28,32 +28,29 @@ export default function FormPropsTextFields() {
     });
   };
 
-
   const isFormValid = () => {
     return Object.values(formData).every(value => value !== '');
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
-    // Prevent the default form submission behavior
-   const idToken = localStorage.getItem("idtoken");
+
+    const idToken = localStorage.getItem('idtoken');
     try {
-      setloading(true)
+      setloading(true);
       const response = await axios.post(
         'https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/createorders',
         formData,
         {
           headers: {
-            "Content-Type": "application/json",
-            ...(idToken ? { Authorization: idToken } : {}),
-          },
+            'Content-Type': 'application/json',
+            ...(idToken ? { Authorization: idToken } : {})
+          }
         }
       );
-      console.log(response)
       if (response.status === 200 || response.status === 201) {
         setSubmitted(true);
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
         navigate('/EmployeeDashboard');
         setFormData({
           order_name: '',
@@ -65,12 +62,13 @@ export default function FormPropsTextFields() {
       } else {
         console.error('Failed to submit the form');
       }
-    } catch (error :any) {
+    } catch (error: any) {
       if (error.response) {
         if (error.response.status === 401) {
           seterrorapi('Unauthorized: Please log in again.');
         } else {
-          const errorMessage = error.response.data.error || 'An error occurred while creating the order.';
+          const errorMessage =
+            error.response.data.error || 'An error occurred while creating the order.';
           seterrorapi(errorMessage);
         }
       } else if (error.request) {
@@ -78,8 +76,7 @@ export default function FormPropsTextFields() {
       } else {
         seterrorapi(error.message || 'An unexpected error occurred.');
       }
-    }
-    finally {
+    } finally {
       setloading(false);
     }
   };
@@ -91,19 +88,29 @@ export default function FormPropsTextFields() {
         component="form"
         onSubmit={handleSubmit}
         sx={{
-          '& .MuiTextField-root': { m: 1, width: '60ch' },
+          '& .MuiTextField-root': {
+            m: 1,
+            width: {
+              xs: '90%', // 90% width on extra small screens
+              sm: '80%', // 80% width on small screens
+              md: '60ch' // 60ch on medium and up
+            }
+          }
         }}
         autoComplete="off"
       >
-        <Typography align="center" sx={{ fontSize: "20px", padding: "10px" }}>
+        <Typography align="center" sx={{ fontSize: '30px', padding: '10px' , color:"#005858", fontWeight:"700"}}>
           Place Your Order!
         </Typography>
-        <div style={{
-          display: 'flex',
-          flexDirection: "column",
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%'
+          }}
+        >
           <TextField
             required
             id="order_name"
@@ -120,7 +127,7 @@ export default function FormPropsTextFields() {
             value={formData.unit_price}
             onChange={handleInputChange}
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
           />
           <TextField
@@ -131,7 +138,7 @@ export default function FormPropsTextFields() {
             value={formData.quantity}
             onChange={handleInputChange}
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
           />
           <TextField
@@ -158,9 +165,10 @@ export default function FormPropsTextFields() {
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!isFormValid()} 
+            disabled={!isFormValid()}
+            sx={{ mt: 2, width: { xs: '90%', sm: '80%', md: '30%' } }}
           >
-            {loading ? "Loading..." : "Submit"}
+            {loading ? 'Loading...' : 'Submit'}
           </Button>
           {submitted && (
             <Typography variant="body1" color="primary">
@@ -170,7 +178,8 @@ export default function FormPropsTextFields() {
           {errorapi && (
             <Typography variant="body1" color="red">
               {errorapi}
-            </Typography>)}
+            </Typography>
+          )}
         </div>
       </Box>
     </>

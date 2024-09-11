@@ -100,7 +100,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
     }
     try {
       setloading(true);
-      const response = await axios.put(
+       await axios.put(
         `https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orderId/${id}`,
         {
           status: finalstate,
@@ -189,8 +189,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
         </Box>
         <Divider />
         <Box mt={2} mb={2}>
-          <Typography variant="body1">
-            <strong>Unit Price:</strong> ${unitprice}
+        <Typography variant="body1">
+            <strong>Unit Price:</strong> ${Number(unitprice).toFixed(2)}
           </Typography>
         </Box>
         <Divider />
@@ -201,8 +201,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
         </Box>
         <Divider />
         <Box mt={2} mb={2}>
-          <Typography variant="body1">
-            <strong>Total Price:</strong> ${unitprice * quantity}
+        <Typography variant="body1">
+            <strong>Total Price:</strong> ${(unitprice * quantity).toFixed(2)}
           </Typography>
         </Box>
         <Divider />
@@ -287,23 +287,22 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
 
             {score === 100 && (
               <Alert severity="success">
-                Fantastic! The order is now accepted and ready to go! Thanks for
-                making it work! 🚀
+                Fantastic! The order is perfect and ready to be accepted! 🚀
               </Alert>
             )}
             {score >= 90 && score < 100 && (
               <Alert severity="success">
-                "🤔 Almost a perfect fit! Just a tiny tweak,What do you say? 🤝"
+                "🤔 Almost a perfect fit! Just a tiny tweak, what do you say? 🤝"
               </Alert>
             )}
             {score < 90 && score >= 70 && (
               <Alert severity="warning">
-                It's not perfect, but it's good enough.Please double check
+                It's not perfect, but it's good enough. Please double check!
               </Alert>
             )}
             {score < 70 && (
               <Alert severity="error">
-                Looks like this one isn't quite right. adjust it and try again.
+                Looks like this one isn't quite right. Adjust it and try again.
               </Alert>
             )}
 

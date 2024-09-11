@@ -16,7 +16,7 @@ interface Orders {
   link: string;
   price_diff: any;
   order_status: string;
-  order_date: string;
+  date: string;
   quantity: number;
   unit_price: number;
   total_price:number;
@@ -81,7 +81,7 @@ const columns: GridColDef[] = [
     },
   },
   {
-    field: "order_date",
+    field: "date",
     flex: 1,
     headerAlign: "center",
     align: "center",
@@ -113,6 +113,8 @@ export default function Authorizer() {
         const ordersWithId = response.data.map((orders: any, index: number) => ({
           ...orders,
           id: orders.ID || index.toString(), 
+          total_price : `${orders.total_price}$`,
+          date: new Date(orders.order_date).toLocaleDateString()
         }));
          setOrders(ordersWithId);
       } catch (err ) {
@@ -203,7 +205,7 @@ export default function Authorizer() {
           quantity={selectedRow.quantity}
           description={selectedRow.order_desc}
           status={selectedRow.order_status}
-          date={selectedRow.order_date}
+          date={selectedRow.date}
           link={selectedRow.link}
           price_diff={selectedRow.price_diff}
           analysis={selectedRow.analysis}
