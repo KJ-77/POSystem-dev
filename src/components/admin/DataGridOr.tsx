@@ -137,7 +137,7 @@ export default function OrdersDataGrid() {
 
   const filteredRows = orders.filter(
     (row) =>
-      row.user_fullname.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      row.order_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (filter === "" || row.order_status.toLowerCase() === filter.toLowerCase())
   );
 

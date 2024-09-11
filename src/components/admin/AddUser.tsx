@@ -235,6 +235,7 @@ const handleEmailChange = (event: any) => {
               },
             }}
             onClick={handleSubmit}
+            disabled={loading}
           >
            {loading ? "Loading..." : "ADD User"}
           </Button>

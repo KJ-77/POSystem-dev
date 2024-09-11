@@ -133,7 +133,7 @@ export default function Authorizer() {
 
   const filteredRows = orders.filter(
     (row) =>
-      row.user_fullname.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      row.order_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (filter === "" || row.order_status.toLowerCase() === filter.toLowerCase())
   );
 
@@ -208,6 +208,7 @@ export default function Authorizer() {
           price_diff={selectedRow.price_diff}
           analysis={selectedRow.analysis}
           score={selectedRow.score}
+          reason={selectedRow.reason}
           isopen={open}
           setisopen={setOpen}
         />

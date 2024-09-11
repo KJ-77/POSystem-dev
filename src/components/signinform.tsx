@@ -88,7 +88,7 @@ async function handleSignIn(
       navigate("/confirmation");
     }
 
-    const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
+    const { idToken } = (await fetchAuthSession()).tokens ?? {};
     const idTokenPayload = idToken?.payload;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-expect-error
@@ -237,6 +237,7 @@ export default function SignInSide() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
                 color="primary"
+                disabled={loading}
               >
                 {loading ? "Loading..." : "Sign In"}
               </Button>
