@@ -8,6 +8,10 @@ import {
   Typography,
   ToggleButtonGroup,
   ToggleButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import theme from "../../globalStyles";
 import { styled } from "@mui/material/styles";
@@ -201,7 +205,7 @@ const handleEmailChange = (event: any) => {
             helperText={errors.email}
           />
 
-
+{/*
           <ToggleButtonGroup
             value={role}
             exclusive
@@ -225,7 +229,24 @@ const handleEmailChange = (event: any) => {
               Employee
             </CustomToggleButton>
           </ToggleButtonGroup>
-
+*/}
+<FormControl fullWidth sx={{
+              marginTop: 4,
+              marginBottom: 4,
+            }}>
+  <InputLabel id="demo-simple-select-label">Role</InputLabel>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={role}
+    label="Role"
+    onChange={(e : any) => { setRole(e.target.value) }}
+  >
+    <MenuItem value={"Admin"}><strong>Admin</strong></MenuItem>
+    <MenuItem value={"Authorizer"}><strong>Authorizer</strong></MenuItem>
+    <MenuItem value={"Employee"}><strong>Employee</strong></MenuItem>
+  </Select>
+</FormControl>
           <Button
             variant="contained"
             sx={{
