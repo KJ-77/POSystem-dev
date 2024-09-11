@@ -112,7 +112,8 @@ export default function Authorizer() {
         });
         const ordersWithId = response.data.map((orders: any, index: number) => ({
           ...orders,
-          id: orders.ID || index.toString(), 
+          id: orders.ID || index.toString(),
+          date: new Date(orders.order_date).toLocaleDateString()
         }));
          setOrders(ordersWithId);
       } catch (err ) {
@@ -203,7 +204,7 @@ export default function Authorizer() {
           quantity={selectedRow.quantity}
           description={selectedRow.order_desc}
           status={selectedRow.order_status}
-          date={selectedRow.order_date}
+          date={selectedRow.date}
           link={selectedRow.link}
           price_diff={selectedRow.price_diff}
           analysis={selectedRow.analysis}
