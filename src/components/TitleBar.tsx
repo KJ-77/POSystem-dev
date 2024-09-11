@@ -148,24 +148,25 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
         ) : (
           <Button
             key={item.name}
-            sx={{ color: '#fff', mx: 1 }}
+            sx={{ color: '#fff', mx: 1,
+               fontWeight: location.pathname === item.path ? '1000' : '100', // Bold when current path matches item's path
+               textDecoration: location.pathname === item.path ? 'underline' : 'none', // Underline if the path matches
+               //fontSize: location.pathname === item.path ? '18px' : 'none',
+            }}
             component={Link}
             to={item.path} 
           >
-            {item.name}
+            {item.name} 
           </Button>
         )
       )}
           </Box>
   {decodedToken && (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', padding: 2 }}>
-      <Typography variant="body1" sx={{ fontSize: { xs: '1rem',sm: '1.2rem',}, marginRight: 1 }}>
-        {decodedToken["cognito:groups"].join(', ')}:
+<Typography variant="body1" sx={{ fontSize: '1rem', marginRight: 1, fontWeight: 'bold' }}>
+{decodedToken["cognito:groups"].join(', ')}:
       </Typography>
-      <Typography variant="body1" sx={{ fontSize: {
-      xs: '1rem',
-      sm: '1.2rem',
-    }, }}>
+      <Typography variant="body1" sx={{ fontSize: '1rem' }}>
         {decodedToken.name}
       </Typography>
       

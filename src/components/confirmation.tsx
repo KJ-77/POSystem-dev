@@ -1,15 +1,14 @@
 import { useState, useEffect, FormEvent } from "react";
 import { TextField, Button, Typography, Container, Box } from "@mui/material";
-import { confirmSignIn,  } from "@aws-amplify/auth";
+import { confirmSignIn } from "@aws-amplify/auth";
 import { useNavigate } from "react-router-dom";
+
 const handleNewPassword = async (newPassword: string): Promise<void> => {
   try {
-    
-
     console.log(newPassword);
     await confirmSignIn({
       challengeResponse: newPassword,
-    })
+    });
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error setting new password:", error.message);
@@ -19,9 +18,9 @@ const handleNewPassword = async (newPassword: string): Promise<void> => {
   }
 };
 
-function  navSignIn(navigate: (path: string) => void){
-    navigate("/");
-};
+function navSignIn(navigate: (path: string) => void) {
+  navigate("/");
+}
 
 const ConfirmationPage = () => {
   const [password, setPassword] = useState<string>("");
@@ -30,6 +29,9 @@ const ConfirmationPage = () => {
   const [passwordsMatch, setPasswordsMatch] = useState<boolean>(true);
   const [isPasswordSet, setIsPasswordSet] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  // Regular expression for password validation
+  const passwordRegex = /^(?=.*\d)[A-Za-z\d]{10,}$/;
 
   useEffect(() => {
     if (confirmPassword) {
@@ -42,6 +44,12 @@ const ConfirmationPage = () => {
 
     if (!passwordsMatch) {
       setError("Passwords do not match");
+      return;
+    }
+
+    // Validate the password using the regex
+    if (!passwordRegex.test(password)) {
+      setError("Password must be with minimum 10 characters long and contain at least one number.");
       return;
     }
 
@@ -95,6 +103,12 @@ const ConfirmationPage = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            error={!passwordRegex.test(password)}
+            helperText={
+              !passwordRegex.test(password)
+                ? "Password must be exactly 10 characters long and contain at least one number."
+                : ""
+            }
           />
           <TextField
             variant="outlined"
@@ -130,7 +144,7 @@ const ConfirmationPage = () => {
                 backgroundColor: "#004d4d",
               },
             }}
-            disabled={!passwordsMatch || !password || !confirmPassword}
+            disabled={!passwordsMatch || !password || !confirmPassword || !passwordRegex.test(password)}
           >
             Confirm
           </Button>

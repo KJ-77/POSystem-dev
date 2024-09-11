@@ -20,6 +20,16 @@ import {
 } from "@aws-amplify/auth";
 import { useEffect } from "react";
 import axios from "axios";
+import IconButton from "@mui/material/IconButton";
+import Input from "@mui/material/Input";
+import FilledInput from "@mui/material/FilledInput";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormControl from "@mui/material/FormControl";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 async function currentAuthenticatedUser() {
   try {
@@ -60,8 +70,7 @@ export const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
 async function handleSignIn(
   { username, password }: SignInInput,
   navigate: (path: string) => void,
-  seterrorapi :any
-
+  seterrorapi: any
 ) {
   try {
     try {
@@ -70,8 +79,8 @@ async function handleSignIn(
       console.log("User signed out");
     } catch (err) {
       seterrorapi(err);
-      console.log(err)
-      console.log("pkhcwondkondvojsdv")
+      console.log(err);
+      console.log("pkhcwondkondvojsdv");
     }
 
     const user = await signIn({ username, password });
@@ -107,14 +116,14 @@ async function handleSignIn(
           },
         }
       );
-    } catch (err :any) {
+    } catch (err: any) {
       seterrorapi(err.message);
     }
 
     if (role === "Admin") navigate("/admin");
     if (role === "Authorizer") navigate("/Authorizer");
     if (role === "Employee") navigate("/EmployeeDashboard");
-  } catch (error :any) {
+  } catch (error: any) {
     seterrorapi(error.message);
   }
 }
@@ -135,6 +144,23 @@ export default function SignInSide() {
   const navigate = useNavigate();
   const [loading, setloading] = React.useState(false);
   const [errorapi, seterrorapi] = React.useState("");
+
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
   useEffect(() => {
     checkSignIn(navigate);
   }, []);
@@ -147,7 +173,7 @@ export default function SignInSide() {
     const password = data.get("password") as string;
 
     try {
-      await handleSignIn({ username, password }, navigate , seterrorapi);
+      await handleSignIn({ username, password }, navigate, seterrorapi);
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
@@ -220,7 +246,8 @@ export default function SignInSide() {
                 autoComplete="email"
                 autoFocus
               />
-              <TextField
+
+              {/* <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -229,7 +256,37 @@ export default function SignInSide() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-              />
+              /> */}
+
+              <FormControl sx={{ m: 0, width: "100%" }} variant="outlined"
+                fullWidth
+                margin="normal"  
+                required  
+                >
+                <InputLabel htmlFor="password">
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  id="password"
+                  name="password"  
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        onMouseUp={handleMouseUpPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
 
               <Button
                 type="submit"
@@ -243,10 +300,10 @@ export default function SignInSide() {
               </Button>
             </Box>
             {errorapi && (
-        <Box p={1} fontSize="15px" color="red">
-           {errorapi}
-        </Box>
-      )}
+              <Box p={1} fontSize="15px" color="red">
+                {errorapi}
+              </Box>
+            )}
             {error && (
               <Typography variant="body1" color="red">
                 {error}
