@@ -16,7 +16,7 @@ interface Orders {
   link: string;
   price_diff: any;
   order_status: string;
-  order_date: string;
+  date: string;
   quantity: number;
   unit_price: number;
   total_price:number;
@@ -81,7 +81,7 @@ const columns: GridColDef[] = [
     },
   },
   {
-    field: "order_date",
+    field: "date",
     flex: 1,
     headerAlign: "center",
     align: "center",
