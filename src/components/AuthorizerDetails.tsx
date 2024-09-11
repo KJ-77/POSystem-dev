@@ -85,11 +85,11 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
   };
 
   const handleButtonClick = async () => {
-    if (!finalstate){
+    if (finalstate ===""){
       setErrorB(true)
       return
     }
-    if (!reason && finalstate === 'Rejected') {
+    if (!reason && status === "Rejected") {
       setError(true);  // Show an error if the reason field is empty
       return;
     }

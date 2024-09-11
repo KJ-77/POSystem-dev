@@ -92,7 +92,7 @@ export default function UsersDataGrid() {
         
         const usersWithId = response.data.map((user: any, index: number) => ({
           ...user,
-          id: user.ID || index.toString(), // Ensure each user has a unique id
+          id: user.ID || index.toString(),
         }));
         setUsers(usersWithId);
       } catch (err) {

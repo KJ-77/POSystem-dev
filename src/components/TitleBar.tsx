@@ -66,7 +66,7 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
     const handleLogout = () => {
       console.log("HandleLogout");
       localStorage.clear();
-      navigate('/'); 
+      navigate('/');
     };
     switch (role) {
       case 'Employee':
@@ -93,7 +93,7 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
-        ProOrder
+        ProOrderd
       </Typography>
       <Divider />
       <List>
@@ -169,6 +169,7 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
       <Typography variant="body1" sx={{ fontSize: '1rem' }}>
         {decodedToken.name}
       </Typography>
+      
     </Box>
           )}
         </Toolbar>

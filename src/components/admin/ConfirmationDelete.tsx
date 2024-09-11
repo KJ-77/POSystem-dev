@@ -46,7 +46,6 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
           }}
           onClick={() => {
             onConfirm();
-            onClose();
           }}
         >
           {loading ? "Loading..." : "Delete"}

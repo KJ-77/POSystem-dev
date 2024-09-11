@@ -59,7 +59,9 @@ export const { accessToken, idToken } = (await fetchAuthSession()).tokens ?? {};
 
 async function handleSignIn(
   { username, password }: SignInInput,
-  navigate: (path: string) => void
+  navigate: (path: string) => void,
+  seterrorapi :any
+
 ) {
   try {
     try {
@@ -67,7 +69,9 @@ async function handleSignIn(
       await signOut();
       console.log("User signed out");
     } catch (err) {
-      console.log("Error signing out user", err);
+      seterrorapi(err);
+      console.log(err)
+      console.log("pkhcwondkondvojsdv")
     }
 
     const user = await signIn({ username, password });
@@ -103,15 +107,15 @@ async function handleSignIn(
           },
         }
       );
-    } catch (err) {
-      console.log(err);
+    } catch (err :any) {
+      seterrorapi(err.message);
     }
 
     if (role === "Admin") navigate("/admin");
     if (role === "Authorizer") navigate("/Authorizer");
     if (role === "Employee") navigate("/EmployeeDashboard");
-  } catch (error) {
-    console.log("Error signing in:", error);
+  } catch (error :any) {
+    seterrorapi(error.message);
   }
 }
 
@@ -130,6 +134,7 @@ export default function SignInSide() {
   const [error, seterror] = React.useState("");
   const navigate = useNavigate();
   const [loading, setloading] = React.useState(false);
+  const [errorapi, seterrorapi] = React.useState("");
   useEffect(() => {
     checkSignIn(navigate);
   }, []);
@@ -142,7 +147,7 @@ export default function SignInSide() {
     const password = data.get("password") as string;
 
     try {
-      await handleSignIn({ username, password }, navigate);
+      await handleSignIn({ username, password }, navigate , seterrorapi);
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error: any) {
@@ -236,6 +241,11 @@ export default function SignInSide() {
                 {loading ? "Loading..." : "Sign In"}
               </Button>
             </Box>
+            {errorapi && (
+        <Box p={1} fontSize="15px" color="red">
+           {errorapi}
+        </Box>
+      )}
             {error && (
               <Typography variant="body1" color="red">
                 {error}
