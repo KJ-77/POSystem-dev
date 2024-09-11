@@ -70,14 +70,14 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
         <Divider />
         <Box mt={2} mb={2}>
           <Typography variant="body1">
-            <strong>Unit Price:</strong>  {unit_price}
+            <strong>Unit Price: </strong>${unit_price}
           </Typography>
         </Box>         
         <Divider />
 
         <Box mt={2} mb={2}>
           <Typography variant="body1">
-            <strong>Total Price:</strong> {totalPrice}
+            <strong>Total Price: </strong>{totalPrice}
           </Typography>
         </Box>    
         <Divider />

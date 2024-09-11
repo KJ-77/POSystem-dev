@@ -112,7 +112,8 @@ export default function Authorizer() {
         });
         const ordersWithId = response.data.map((orders: any, index: number) => ({
           ...orders,
-          id: orders.ID || index.toString(),
+          id: orders.ID || index.toString(), 
+          total_price : `${orders.total_price}$`,
           date: new Date(orders.order_date).toLocaleDateString()
         }));
          setOrders(ordersWithId);

@@ -67,7 +67,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
         <Divider />
         <Box mt={2} mb={2}>
           <Typography variant="body1">
-            <strong>Unit Price:</strong> ${unitprice}
+            <strong>Unit Price:</strong> ${Number(unitprice).toFixed(2)}
           </Typography>
         </Box>
         <Divider />
@@ -79,7 +79,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
         <Divider />
         <Box mt={2} mb={2}>
           <Typography variant="body1">
-            <strong>Total Price:</strong> ${unitprice * quantity}
+            <strong>Total Price:</strong> ${(unitprice * quantity).toFixed(2)}
           </Typography>
         </Box>
         <Divider />

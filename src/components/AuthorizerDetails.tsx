@@ -100,7 +100,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
     }
     try {
       setloading(true);
-      const response = await axios.put(
+       await axios.put(
         `https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orderId/${id}`,
         {
           status: finalstate,
@@ -189,8 +189,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
         </Box>
         <Divider />
         <Box mt={2} mb={2}>
-          <Typography variant="body1">
-            <strong>Unit Price:</strong> ${unitprice}
+        <Typography variant="body1">
+            <strong>Unit Price:</strong> ${Number(unitprice).toFixed(2)}
           </Typography>
         </Box>
         <Divider />
@@ -201,8 +201,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
         </Box>
         <Divider />
         <Box mt={2} mb={2}>
-          <Typography variant="body1">
-            <strong>Total Price:</strong> ${unitprice * quantity}
+        <Typography variant="body1">
+            <strong>Total Price:</strong> ${(unitprice * quantity).toFixed(2)}
           </Typography>
         </Box>
         <Divider />

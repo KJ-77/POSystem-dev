@@ -89,7 +89,7 @@ export default function OrdersDataGrid() {
           id: index,
           name: order.order_name,
           description: order.order_desc,
-          totalprice: order.total_price,
+          totalprice: `$${order.total_price}`,
           quantity:order.quantity,
           unit_price:order.unit_price,
           status: order.order_status,
