@@ -68,6 +68,34 @@ const columns: GridColDef[] = [
       );
     },
   },
+  {
+    field: "status",
+    flex: 1,
+    headerAlign: "center",
+    align: "center",
+    renderHeader: () => (
+      <strong style={{ color: "rgb(190,190,190)" }}>{"Status"}</strong>
+    ),
+    renderCell: (params) => {
+      const { value } = params;
+      return (
+        <div
+          style={{
+            color:
+              value === "working"
+                ? theme.palette.telet.main
+                : value === "Not verified"
+                ? theme.palette.teni.main
+                : "red",
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
+          {value}
+        </div>
+      );
+    },
+  },
 ];
 
 export default function UsersDataGrid() {
@@ -89,7 +117,8 @@ export default function UsersDataGrid() {
             Authorization: localStorage.getItem('idtoken') || ''
           }
         });
-        
+        console.log(response.data)
+        console.log("opsjconcdjncd")
         const usersWithId = response.data.map((user: any, index: number) => ({
           ...user,
           id: user.ID || index.toString(),

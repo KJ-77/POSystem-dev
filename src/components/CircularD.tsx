@@ -11,16 +11,19 @@ interface interfaceCirProp {
  const  CircularProgressWithLabel : React.FC<interfaceCirProp> = ({score}) => {
 
   return (
-    <Box position="relative" display="inline-flex" >
+    <Box position="relative" display="inline-flex" sx={{ alignItems: 'center',
+      justifyContent: 'center',}} >
       <CircularProgress
         variant="determinate"
         value={score}
         size={150}
         thickness={5}
+        
         sx={{
           color: score >= 90 ? 'primary.main' 
                 : score >= 70 ? 'warning.main' 
                 : 'error.main',
+               
         }}
       />
       <Box

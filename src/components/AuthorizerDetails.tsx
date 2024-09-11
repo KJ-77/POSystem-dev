@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast ,ToastContainer} from 'react-toastify';
+import { toast, ToastContainer } from "react-toastify";
 import {
   Box,
   Button,
@@ -7,15 +7,14 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  TextField,
   Typography,
 } from "@mui/material";
 import axios from "axios";
 import CircularD from "./CircularD";
 import Alert from "@mui/material/Alert";
-import CustomButton from "../CustomStyle/CustomButton";
+//import CustomButton from "../CustomStyle/CustomButton";
 import CloseIcon from "@mui/icons-material/Close";
-
+import ConfirmUpdate from "./ConfirmUpdate";
 interface OrderDetailsProps {
   id: string;
   name: string;
@@ -30,6 +29,7 @@ interface OrderDetailsProps {
   price_diff: number;
   isopen: boolean;
   score: number;
+  reason: string;
   setisopen: (isOpen: boolean) => void;
 }
 
@@ -45,6 +45,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
   link,
   analysis,
   score,
+  reason,
   isopen,
   setisopen,
 }) => {
@@ -52,20 +53,25 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
     "success" | "error" | null
   >(null);
   const [finalstate, setfinalstate] = useState("");
-  const [reason, setReason] = useState("");
+  const [reasonset, setReason] = useState("");
   const [loading, setloading] = useState(false);
   const [error, setError] = useState(false);
-  const [errorB, setErrorB] = useState(false);
+  //const [errorB, setErrorB] = useState(false);
   const [errorapi, seterrorapi] = useState("");
+  const [open, setOpen] = React.useState(false);
+
   const closehandler = () => {
     setSelectedButton(null);
     setfinalstate("");
     setisopen(false);
+    setOpen(false)
   };
   const handleSuccessClick = () => {
-    setErrorB(false)
+   // setErrorB(false);
+   seterrorapi("")
     setSelectedButton("success");
     setfinalstate("Accepted");
+    setOpen(true)
   };
   const handleUpdateOrder = (finalstate: string) => {
     toast.success(`Order ${finalstate} successfully`, {
@@ -79,64 +85,63 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
     });
   };
   const handleErrorClick = () => {
-    setErrorB(false)
+   // setErrorB(false);
+   seterrorapi("")
     setSelectedButton("error");
     setfinalstate("Rejected");
+    setOpen(true)
   };
 
   const handleButtonClick = async () => {
-    if (finalstate ===""){
-      setErrorB(true)
-      return
-    }
-    console.log(finalstate)
-    if (!reason && status === "Rejected") {
-      setError(true);  // Show an error if the reason field is empty
+    seterrorapi("")
+    if (!reasonset && finalstate === "Rejected") {
+      setError(true); // Show an error if the reason field is empty
       return;
     }
     try {
       setloading(true);
-      const response = await axios.put(`https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orderId/${id}`, 
+      const response = await axios.put(
+        `https://n1458hy4ek.execute-api.us-east-1.amazonaws.com/dev/orderId/${id}`,
         {
           status: finalstate,
-          reason: reason
-        }, 
+          reason: reasonset,
+        },
         {
           headers: {
-            Authorization: localStorage.getItem('idtoken')
-          }
+            Authorization: localStorage.getItem("idtoken"),
+          },
         }
       );
-      
-      console.log("API response:", response.data);
       handleUpdateOrder(finalstate);
+      setOpen(false)
       closehandler();
       setloading(false);
-     } catch (error : any) {
-        if (error.response) {
-          if (error.response.status === 401) {
-            seterrorapi('Unauthorized: Please log in again.');
-          }else{
-          const errorMessage = error.response.data.error || 'An error occurred while creating the user.';
-          seterrorapi(errorMessage);
-            }
-        } else if (error.request) {
-          
-          seterrorapi('No response received from the server. Please try again.');
-          console.error('No response received:', error.request);
-        } else {
-          
-          seterrorapi(error.message || 'An unexpected error occurred.');
-          console.error('Error setting up the request:', error.message);
-        }
-      }
       
-      finally {
-        setloading(false);
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          seterrorapi("Unauthorized: Please log in again.");
+        } else {
+          const errorMessage =
+            error.response.data.error ||
+            "An error occurred while creating the user.";
+          seterrorapi(errorMessage);
+        }
+      } else if (error.request) {
+        seterrorapi("No response received from the server. Please try again.");
+        console.error("No response received:", error.request);
+      } else {
+        seterrorapi(error.message || "An unexpected error occurred.");
+        console.error("Error setting up the request:", error.message);
       }
+    } finally {
+      setloading(false);
+    }
   };
 
   return (
+    <>
+    <ToastContainer />
     <Dialog
       open={isopen}
       onClose={() => setisopen(false)}
@@ -145,7 +150,6 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
     >
       <DialogTitle>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <ToastContainer />
           <Typography
             variant="h4"
             fontWeight="bold"
@@ -202,14 +206,14 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
           </Typography>
         </Box>
         <Divider />
-        <Box mt={2} mb={2} >
+        <Box mt={2} mb={2}>
           <Typography variant="body1">
             <strong>Description:</strong> {description}
           </Typography>
         </Box>
         <Divider />
-        <Box mt={2} mb={2} >
-          <Typography variant="body1" >
+        <Box mt={2} mb={2}>
+          <Typography variant="body1">
             <strong>Link of order: </strong> {link}
           </Typography>
         </Box>
@@ -248,15 +252,23 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
               variant="body1"
               sx={{ color: "#005858", fontSize: "1rem" }}
             >
-              <strong>
-                {reason}
-              </strong>
+              <strong>{reason}</strong>
             </Typography>
           </Box>
         )}
         {status === "Pending" && (
           <>
-            <Box display="inline-flex" sx={{ mt: 4, mb: 4 }}>
+            <Box
+              display="inline-flex"
+              sx={{
+                mt: 4,
+                mb: 4,
+                flexDirection: {
+                  xs: "column",
+                  sm: "row",
+                },
+              }}
+            >
               <CircularD score={score} />
               <Typography
                 sx={{
@@ -323,16 +335,16 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
           </>
         )}
 
-        {finalstate === "Rejected" && (
+        {/*finalstate === "Rejected" && (
           <TextField
             label="your reason"
             variant="outlined"
             fullWidth
             required
-            value={reason}
+            value={reasonset}
             onChange={(e) => {
-            setReason(e.target.value);
-            setError(false); 
+              setReason(e.target.value);
+              setError(false);
             }}
             error={error}
             helperText={error ? "Reason is required" : ""}
@@ -352,8 +364,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
               },
             }}
           />
-        )}
-        <Box
+        )*/}
+        {/*<Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
@@ -361,25 +373,31 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
             marginTop: "50px",
           }}
         >
-          {finalstate && (
+          finalstate && (
             <CustomButton onClick={handleButtonClick}>
-              {loading ? "Loading..." : "Subnet"}
+              {loading ? "Loading..." : "Submit"}
             </CustomButton>
-          )}
-        </Box>
-        {errorB && (
-        <Box p={1} fontSize="15px" color="red">
-           take the decision please
-        </Box>
-      )}
-        {errorapi && (
-        <Box p={1} fontSize="15px" color="red">
-           {errorapi}
-        </Box>
-      )}
+          )
+        </Box>*/}
+        
+        <ConfirmUpdate
+          open={open}
+          setOpen={setOpen}
+          handleButtonClick={handleButtonClick}
+          loading={loading}
+          reasonset={reasonset}
+          setReason={setReason}
+          finalstate={finalstate}
+          error={error}
+          setError={setError}
+          errorapi={errorapi}
+        />
       </DialogContent>
     </Dialog>
+    </>
   );
 };
 
 export default OrderDetails;
+
+/*  const [open, setOpen] = React.useState(false);*/

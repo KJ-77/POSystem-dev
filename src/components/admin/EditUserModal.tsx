@@ -134,6 +134,7 @@ export default function SignUp({ id }: any) {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
             >
               {loading ? "Loading..." : "Submit"}
             </Button>

@@ -113,7 +113,8 @@ export default function Authorizer() {
         const ordersWithId = response.data.map((orders: any, index: number) => ({
           ...orders,
           id: orders.ID || index.toString(), 
-          total_price : `${orders.total_price}$`
+          total_price : `${orders.total_price}$`,
+          date: new Date(orders.order_date).toLocaleDateString()
         }));
          setOrders(ordersWithId);
       } catch (err ) {
@@ -134,7 +135,7 @@ export default function Authorizer() {
 
   const filteredRows = orders.filter(
     (row) =>
-      row.user_fullname.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      row.order_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (filter === "" || row.order_status.toLowerCase() === filter.toLowerCase())
   );
 
@@ -204,11 +205,12 @@ export default function Authorizer() {
           quantity={selectedRow.quantity}
           description={selectedRow.order_desc}
           status={selectedRow.order_status}
-          date={selectedRow.order_date}
+          date={selectedRow.date}
           link={selectedRow.link}
           price_diff={selectedRow.price_diff}
           analysis={selectedRow.analysis}
           score={selectedRow.score}
+          reason={selectedRow.reason}
           isopen={open}
           setisopen={setOpen}
         />

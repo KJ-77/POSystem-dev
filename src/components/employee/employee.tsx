@@ -103,7 +103,7 @@ export default function OrdersDataGrid() {
       }
     };
 
-    fetchOrders();
+    fetchOrders()
   }, []);
 
   const handleRowClick = (params: GridRowParams) => {
