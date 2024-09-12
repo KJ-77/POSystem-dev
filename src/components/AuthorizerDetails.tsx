@@ -287,23 +287,22 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
 
             {score === 100 && (
               <Alert severity="success">
-                Fantastic! The order is now accepted and ready to go! Thanks for
-                making it work! 🚀
+                Fantastic! The order is perfect and ready to be accepted! 🚀
               </Alert>
             )}
             {score >= 90 && score < 100 && (
               <Alert severity="success">
-                "🤔 Almost a perfect fit! Just a tiny tweak,What do you say? 🤝"
+                "🤔 Almost a perfect fit! Just a tiny tweak, what do you say? 🤝"
               </Alert>
             )}
             {score < 90 && score >= 70 && (
               <Alert severity="warning">
-                It's not perfect, but it's good enough.Please double check
+                It's not perfect, but it's good enough. Please double check!
               </Alert>
             )}
             {score < 70 && (
               <Alert severity="error">
-                Looks like this one isn't quite right. adjust it and try again.
+                Looks like this one isn't quite right. Adjust it and try again.
               </Alert>
             )}
 
