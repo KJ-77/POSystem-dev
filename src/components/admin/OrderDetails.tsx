@@ -129,7 +129,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({
               variant="body1"
               sx={{ color: "#005858", fontSize: "1rem" }}
             >
-              \<strong>{reason}</strong>
+              <strong>{reason}</strong>
             </Typography>
           </Box>
         )}

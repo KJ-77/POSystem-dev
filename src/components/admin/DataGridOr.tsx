@@ -137,9 +137,33 @@ export default function OrdersDataGrid() {
     setOpen(true);
   };
 
+
+/*
+  ID: string;
+  order_name: string;
+  order_desc: string;
+  link: string;
+  price_diff: any;
+  order_status: string;
+  order_date: string;
+  quantity: number;
+  unit_price: number;
+  total_price:number;
+  reason:null;
+  analysis:string;
+  score:null;
+  worker_id:string;
+  user_fullname:string;
+*/
+
   const filteredRows = orders.filter(
     (row) =>
-      row.order_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (row.order_name.toLowerCase().includes(searchTerm.toLowerCase())||
+    row.order_desc.toLowerCase().includes(searchTerm.toLowerCase())||
+    row.order_status.toLowerCase().includes(searchTerm.toLowerCase())||
+    row.user_fullname.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+    &&
       (filter === "" || row.order_status.toLowerCase() === filter.toLowerCase())
   );
 

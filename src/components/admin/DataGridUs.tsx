@@ -141,10 +141,18 @@ export default function UsersDataGrid() {
     setSelectedRow(params.row as Users); // Explicit type assertion here
     setOpen(true);
   };
-
+/*FULLNAME: string;
+  email: string;
+  position: "Admin" | "Authorizer" | "Employee";
+  status: string; */
   const filteredRows = users.filter(
     (row) =>
-      row.FULLNAME.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (row.FULLNAME.toLowerCase().includes(searchTerm.toLowerCase())||
+     row.email.toLowerCase().includes(searchTerm.toLowerCase())||
+     row.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     row.status.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+    &&
       row.position.toLowerCase().includes(filter.toLowerCase())
   );
 

@@ -7,7 +7,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box, TextField } from '@mui/material';
 
-
 /*
 
 interface ConfirmationDialogProps {
@@ -89,9 +88,20 @@ interface ConfirmUpdateI {
         )}
         <DialogActions>
           <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={() => {handleButtonClick()}} autoFocus disabled={loading}>
-            {loading ? "Loading..." : "Continue"}
-          </Button>
+          <Button
+          autoFocus
+          sx={{
+            backgroundColor: "#388e3c",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "#2e7d32",
+            },
+          }}
+          onClick={() => {handleButtonClick()}}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Continue"}
+        </Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

@@ -135,7 +135,11 @@ export default function Authorizer() {
 
   const filteredRows = orders.filter(
     (row) =>
-      row.order_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (row.order_name.toLowerCase().includes(searchTerm.toLowerCase())||
+    row.order_desc.toLowerCase().includes(searchTerm.toLowerCase())||
+    row.order_status.toLowerCase().includes(searchTerm.toLowerCase())||
+    row.user_fullname.toLowerCase().includes(searchTerm.toLowerCase())
+  ) &&
       (filter === "" || row.order_status.toLowerCase() === filter.toLowerCase())
   );
 

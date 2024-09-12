@@ -87,17 +87,17 @@ const handleEmailChange = (event: any) => {
 }
   const handleSubmit = async () => {
     try {
-      if (!username.trim()) {
+     /* if (!username.trim()) {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          username: "Username is required",
+          username: "fullname is required",
         }));
       }
         if (!isValidEmail(email)) {
           setErrors((prevErrors) => ({
             ...prevErrors,
             email: "Invalid email format",
-          }));}
+          }));}*/
         if(username.trim() && isValidEmail(email)){
       setloading(true);
         await axios.post(
@@ -143,6 +143,7 @@ const handleEmailChange = (event: any) => {
     setloading(false);
   }
   };
+
   return (
     <div>
 <ToastContainer />
@@ -168,10 +169,10 @@ const handleEmailChange = (event: any) => {
             position: "absolute",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -50%)", // Center the modal
+            transform: "translate(-50%, -50%)",
             width: 400,
             bgcolor: "background.paper",
-            border: "none", // Remove border
+            border: "none",
             boxShadow: 24,
             p: 4,
           }}
@@ -257,7 +258,7 @@ const handleEmailChange = (event: any) => {
               },
             }}
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={!(username.trim()&&isValidEmail(email) )||  loading}
           >
            {loading ? "Loading..." : "ADD User"}
           </Button>
