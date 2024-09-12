@@ -76,7 +76,9 @@ const TitleBar: React.FC<Props> = ({ window, role }) => {
           { name: 'Logout', onclick: handleLogout,  },
         ];
       case 'Authorizer':
-        return [{ name: 'Logout', onclick: handleLogout }];
+        return [{ name: 'Logout', onclick: handleLogout },
+          {name: 'View Orders', path:'/'}
+        ];
       case 'Admin':
         return [
           { name: 'View Orders', path: '/admin' },

@@ -120,6 +120,7 @@ export default function FormPropsTextFields() {
             onChange={handleInputChange}
           />
           <TextField
+            required
             id="unit_price"
             label="Price"
             type="number"
@@ -130,27 +131,38 @@ export default function FormPropsTextFields() {
               shrink: true
             }}
           />
+<TextField
+  required
+  id="quantity"
+  label="Quantity"
+  type="number"
+  name="quantity"
+  value={formData.quantity}
+  onChange={handleInputChange}
+  onInput={(e) => {
+    const input = e.target as HTMLInputElement;  // Cast to HTMLInputElement
+    input.value = input.value.replace(/[^0-9]/g, '');  // Remove non-numeric characters
+  }}
+  InputLabelProps={{
+    shrink: true,
+  }}
+  inputProps={{
+    min: 0,  // Optional: prevent negative values
+  }}
+/>
           <TextField
-            id="quantity"
-            label="Quantity"
-            type="number"
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleInputChange}
-            InputLabelProps={{
-              shrink: true
-            }}
-          />
-          <TextField
+            required          
             id="link"
             label="Link"
             name="link"
             placeholder="https://www.amazon.com/..."
+            type="email" // Enforces email format
             value={formData.link}
             onChange={handleInputChange}
             helperText="Enter the link of your product"
           />
           <TextField
+            required
             id="order_desc"
             label="Description"
             name="order_desc"
