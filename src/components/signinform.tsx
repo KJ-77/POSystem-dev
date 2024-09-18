@@ -77,7 +77,7 @@ async function handleSignIn(
     } catch (err) {
       seterrorapi(err);
       console.log(err);
-      console.log("pkhcwondkondvojsdv");
+
     }
 
     const user = await signIn({ username, password });
@@ -297,10 +297,12 @@ export default function SignInSide() {
               </Button>
             </Box>
             {errorapi && (
-              <Box p={1} fontSize="15px" color="red">
-                {errorapi}
-              </Box>
-            )}
+  <Box p={1} fontSize="15px" color="red">
+    {errorapi === "username is required to signIn" 
+      ? "email is required to signIn" 
+      : errorapi}
+  </Box>
+)}
             {error && (
               <Typography variant="body1" color="red">
                 {error}

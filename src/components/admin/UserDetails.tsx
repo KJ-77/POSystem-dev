@@ -13,7 +13,7 @@ import CustomButton from "../../CustomStyle/CustomButton";
 import theme from "../../globalStyles";
 import ConfirmationDelete from "./ConfirmationDelete";
 import { toast, ToastContainer } from "react-toastify";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 //import EditUser from "./EditUser";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -37,6 +37,14 @@ const UserDetails: React.FC<OrderDetails> = ({
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loading, setloading] = useState(false);
+
+
+  useEffect(() => {
+    if (isopen) {
+      setfullname(username);
+      setemail(email);
+    }
+  }, [isopen, username, email]);
 
   const handleDialogClose = () => {
     setIsDialogOpen(false);
@@ -93,16 +101,22 @@ const UserDetails: React.FC<OrderDetails> = ({
       setloading(false);
     }
   };
+
+
   const [edit, setEdit] = React.useState(false);
   const [fullname, setfullname] = React.useState(username);
   const [semail, setemail] = React.useState(email);
   const [error,seterror] = React.useState("")
   const handleOpen = () => setEdit(true);
-  const handleClose = () => {
+  const handleCancel = () => {
     setEdit(false);
     setfullname(username)
     setemail(email)
   };
+
+
+
+
   const handleSubmit = async () => {
    
     const bodyData: any = {};
@@ -220,7 +234,7 @@ const UserDetails: React.FC<OrderDetails> = ({
                   <Button
                     variant="outlined"
                     color="success"
-                    onClick={handleClose}
+                    onClick={handleCancel}
                   >
                     Cancel
                   </Button>
@@ -266,7 +280,7 @@ const UserDetails: React.FC<OrderDetails> = ({
                   >
                     Edit User
                   </Button>
-                  <CustomButton onClick={() => setisopen(false)}>
+                  <CustomButton onClick={()=>{setisopen(false)}}>
                     Close
                   </CustomButton>
                 </>

@@ -147,15 +147,16 @@ export default function UsersDataGrid() {
   status: string; */
   const filteredRows = users.filter(
     (row) =>
-      (row.FULLNAME.toLowerCase().includes(searchTerm.toLowerCase())||
-     row.email.toLowerCase().includes(searchTerm.toLowerCase())||
-     row.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     row.status.toLowerCase().includes(searchTerm.toLowerCase())
+      (row.FULLNAME?.toLowerCase().includes(searchTerm.toLowerCase())||
+     row.email?.toLowerCase().includes(searchTerm.toLowerCase())||
+     row.position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     row.status?.toLowerCase().includes(searchTerm.toLowerCase())
   )
     &&
-      row.position.toLowerCase().includes(filter.toLowerCase())
+      row.position?.toLowerCase().includes(filter.toLowerCase())
   );
 
+  
   return (
     <>
       {loading ? (

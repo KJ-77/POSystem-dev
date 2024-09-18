@@ -156,7 +156,6 @@ export default function FormPropsTextFields() {
             label="Link"
             name="link"
             placeholder="https://www.amazon.com/..."
-            type="email" // Enforces email format
             value={formData.link}
             onChange={handleInputChange}
             helperText="Enter the link of your product"

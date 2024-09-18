@@ -110,15 +110,13 @@ export default function OrdersDataGrid() {
     setSelectedRow(params.row);
     setOpen(true);
   };
-  
   const filteredRows = rows.filter(
     (row) =>
-      (row.order_name.toLowerCase().includes(searchTerm.toLowerCase())||
-    row.order_desc.toLowerCase().includes(searchTerm.toLowerCase())||
-    row.order_status.toLowerCase().includes(searchTerm.toLowerCase())||
-    row.user_fullname.toLowerCase().includes(searchTerm.toLowerCase())
+      (row.name?.toLowerCase().includes(searchTerm.toLowerCase())||
+    row.description?.toLowerCase().includes(searchTerm.toLowerCase())||
+    row.status?.toLowerCase().includes(searchTerm.toLowerCase())
   ) &&
-      (filter === "" || row.status.toLowerCase() === filter.toLowerCase())
+      (filter === "" || row.status?.toLowerCase() === filter.toLowerCase())
   );
 
   return (

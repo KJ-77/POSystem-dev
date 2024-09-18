@@ -15,6 +15,7 @@ import theme from "../../globalStyles";
 //import { styled } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 //import {signUp } from "@aws-amplify/auth";
 //import  Auth  from 'aws-amplify/auth';
 
@@ -42,7 +43,7 @@ function MyModal() {
     email: "",
     password: "",
   });
-
+ const navigate = useNavigate();
 
   const handleAddingUser = () => {
     toast.success('User added successfully & we send invitation email!', {
@@ -116,9 +117,10 @@ const handleEmailChange = (event: any) => {
       );
       handleAddingUser()
       handleClose();
-      setUsername('');
-      setEmail('');
-      seterrorapi('')
+      setTimeout(() => {
+        navigate(0);
+      }, 3000)
+     // window.location.reload();
     }
   } catch (error : any) {
     if (error.response) {
